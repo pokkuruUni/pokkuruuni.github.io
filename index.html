@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -8,67 +8,27 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 300px;
-            margin: 0 auto;
-            height: 200px;
-            max-height: 200px;
+        .chart-container { 
+            position: relative; width: 100%; max-width: 300px; margin: 0 auto; height: 200px; max-height: 200px; 
         }
-
-        .custom-scroll::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .custom-scroll::-webkit-scrollbar-track {
-            background: #f1f5f9;
-            border-radius: 8px;
-        }
-
-        .custom-scroll::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 8px;
-        }
-
-            .custom-scroll::-webkit-scrollbar-thumb:hover {
-                background: #94a3b8;
-            }
-
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 8px;}
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
         .typewriter-text {
             border-right: 2px solid #ef4444;
             animation: blink-cursor 0.75s step-end infinite;
         }
-
         @keyframes blink-cursor {
-            from, to {
-                border-color: transparent
-            }
-
-            50% {
-                border-color: #ef4444;
-            }
+            from, to { border-color: transparent }
+            50% { border-color: #ef4444; }
         }
-
         .loader {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #ef4444;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            animation: spin 1s linear infinite;
-            display: inline-block;
+            border: 3px solid #f3f3f3; border-top: 3px solid #ef4444; border-radius: 50%;
+            width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block;
         }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
@@ -111,7 +71,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-grow">
                 <!-- Left Column: Input Form -->
                 <div class="lg:col-span-5 flex flex-col space-y-4">
-
+                    
                     <!-- ライブラリモード (自動取得) -->
                     <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-200 shadow-sm">
                         <h3 class="text-sm font-bold mb-2 text-indigo-800 flex items-center"><span class="mr-1">🔍</span> ライブラリから自動入力</h3>
@@ -176,7 +136,7 @@
                                     <span id="preview-placeholder" class="text-slate-400 text-xs">画像未選択</span>
                                 </div>
                             </div>
-
+                            
                             <div class="flex space-x-2 pt-2">
                                 <button type="submit" id="btn-submit" class="flex-grow bg-slate-800 text-white font-bold py-2 px-4 rounded hover:bg-slate-900 transition shadow text-sm">リストに追加</button>
                                 <button type="button" id="btn-cancel" onclick="cancelEdit()" class="hidden bg-slate-200 text-slate-700 font-bold py-2 px-4 rounded hover:bg-slate-300 transition text-sm">キャンセル</button>
@@ -224,14 +184,14 @@
 
         <!-- ==================== 2. HOST / OFFLINE QUIZ MODE ==================== -->
         <section id="view-quiz" class="hidden flex-grow flex flex-col items-center max-w-4xl mx-auto w-full">
-
+            
             <div id="quiz-setup-msg" class="text-center mt-20 hidden w-full px-4">
                 <p class="text-lg sm:text-xl text-slate-500 mb-4">問題が登録されていません。</p>
                 <button onclick="switchMode('editor')" class="bg-red-600 text-white px-6 py-2 rounded shadow hover:bg-red-700 transition">エディタに戻る</button>
             </div>
 
             <div id="quiz-container" class="w-full flex flex-col space-y-3">
-
+                
                 <!-- マルチプレイ (Host) コントロールパネル -->
                 <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-200 flex flex-col sm:flex-row justify-between items-center gap-4">
                     <div class="text-center sm:text-left">
@@ -363,7 +323,7 @@
 
         <!-- ==================== 3. GUEST MODE ==================== -->
         <section id="view-guest" class="hidden flex-grow flex flex-col items-center max-w-3xl mx-auto w-full">
-
+            
             <!-- Login Panel -->
             <div id="guest-login-panel" class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg border border-slate-200 w-full max-w-sm mt-4 sm:mt-10">
                 <h2 class="text-xl sm:text-2xl font-bold text-center text-indigo-800 mb-6">🚪 部屋に参加する</h2>
@@ -383,7 +343,7 @@
 
             <!-- Quiz Panel (Waiting / Playing / Revealed) -->
             <div id="guest-quiz-panel" class="hidden w-full flex flex-col space-y-3">
-
+                
                 <!-- Status Bar -->
                 <div class="bg-white px-3 py-2 rounded-xl shadow-sm border border-slate-200 flex justify-between items-center">
                     <div class="font-bold text-slate-600 text-sm flex items-center">
@@ -483,20 +443,20 @@
             apiKey: "AIzaSyCCfN__xqSeTlPGABz-QMHc6Dvu7Q0kpkQ",
             authDomain: "pokemon-quiz-maker.firebaseapp.com",
             projectId: "pokemon-quiz-maker",
-            storageBucket: "pokemon-quiz-maker.firebasestorage.app",
+          　storageBucket: "pokemon-quiz-maker.firebasestorage.app",
             messagingSenderId: "584646136791",
-            appId: "1:584646136791:web:a27c399eeecaf9dc3ab192"
+          　appId: "1:584646136791:web:a27c399eeecaf9dc3ab192"
         };
         // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
-
+        
         try {
-        if (typeof __firebase_config !== 'undefined') {
-        firebaseConfig = typeof __firebase_config === 'string' ? JSON.parse(__firebase_config) : __firebase_config;
-        }
+            if (typeof __firebase_config !== 'undefined') {
+                firebaseConfig = typeof __firebase_config === 'string' ? JSON.parse(__firebase_config) : __firebase_config;
+            }
         } catch(e) { console.error("Firebase config error", e); }
-
+        
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'pokemon-quiz-app';
-
+        
         let auth, db, currentUser = null;
 
         // Editor State
@@ -508,13 +468,13 @@
 
         // Offline/Host Quiz State
         let currentQIndex = 0;
-        let quizState = 'idle';
+        let quizState = 'idle'; 
         let typeStartTime = 0;
         let typeInterval = null;
         let charIndex = 0;
-        let currentHintLevel = 0;
+        let currentHintLevel = 0; 
         let currentTextSpeed = 80;
-
+        
         // Timer State
         let globalTimerInterval = null;
         let currentTimerDeadline = null;
@@ -525,1259 +485,1279 @@
         let unsubscribeRoom = null;
         let myGuestName = "";
         let latestRoomData = null;
-        let guestCurrentQuestionId = null;
+        let guestCurrentQuestionId = null; 
 
         // Util: Custom Modal
         window.showModal = function(message, isConfirm = false) {
-        return new Promise((resolve) => {
-        const modal = document.getElementById('custom-modal');
-        document.getElementById('modal-message').innerHTML = message.replace(/\n/g, '<br>');
-        const cancelBtn = document.getElementById('modal-btn-cancel');
-        const confirmBtn = document.getElementById('modal-btn-confirm');
-        if (isConfirm) cancelBtn.classList.remove('hidden'); else cancelBtn.classList.add('hidden');
-
-        modal.classList.remove('hidden');
-        setTimeout(() => modal.children[0].classList.replace('scale-95', 'scale-100'), 10);
-
-        const cleanup = () => {
-        modal.children[0].classList.replace('scale-100', 'scale-95');
-        setTimeout(() => modal.classList.add('hidden'), 200);
-        confirmBtn.onclick = null; cancelBtn.onclick = null;
-        };
-        confirmBtn.onclick = () => { cleanup(); resolve(true); };
-        cancelBtn.onclick = () => { cleanup(); resolve(false); };
-        });
+            return new Promise((resolve) => {
+                const modal = document.getElementById('custom-modal');
+                document.getElementById('modal-message').innerHTML = message.replace(/\n/g, '<br>');
+                const cancelBtn = document.getElementById('modal-btn-cancel');
+                const confirmBtn = document.getElementById('modal-btn-confirm');
+                if (isConfirm) cancelBtn.classList.remove('hidden'); else cancelBtn.classList.add('hidden');
+                
+                modal.classList.remove('hidden');
+                setTimeout(() => modal.children[0].classList.replace('scale-95', 'scale-100'), 10);
+                
+                const cleanup = () => {
+                    modal.children[0].classList.replace('scale-100', 'scale-95');
+                    setTimeout(() => modal.classList.add('hidden'), 200);
+                    confirmBtn.onclick = null; cancelBtn.onclick = null;
+                };
+                confirmBtn.onclick = () => { cleanup(); resolve(true); };
+                cancelBtn.onclick = () => { cleanup(); resolve(false); };
+            });
         };
 
         // Util: Image Compressor
         function compressImage(base64Str, maxWidth, callback) {
-        const img = new Image();
-        img.src = base64Str;
-        img.onload = () => {
-        let width = img.width, height = img.height;
-        if (width > maxWidth) { height = Math.floor(height * (maxWidth / width)); width = maxWidth; }
-        const canvas = document.createElement('canvas');
-        canvas.width = width; canvas.height = height;
-        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
-        callback(canvas.toDataURL('image/webp', 0.8));
-        };
-        img.onerror = () => callback(base64Str);
+            const img = new Image();
+            img.src = base64Str;
+            img.onload = () => {
+                let width = img.width, height = img.height;
+                if (width > maxWidth) { height = Math.floor(height * (maxWidth / width)); width = maxWidth; }
+                const canvas = document.createElement('canvas');
+                canvas.width = width; canvas.height = height;
+                canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+                callback(canvas.toDataURL('image/webp', 0.8));
+            };
+            img.onerror = () => callback(base64Str);
         }
 
         // Util: Normalize string for comparison
         function normalizeAnswer(str) {
-        if (!str) return "";
-        let s = str.replace(/[\s　]/g, '');
-        s = s.replace(/[\u3041-\u3096]/g, m => String.fromCharCode(m.charCodeAt(0) + 0x60));
-        return s;
+            if (!str) return "";
+            let s = str.replace(/[\s　]/g, '');
+            s = s.replace(/[\u3041-\u3096]/g, m => String.fromCharCode(m.charCodeAt(0) + 0x60));
+            return s;
         }
 
         // Util: Timer UI
         function startTimerUI(deadline, durationSec, prefix) {
-        clearInterval(globalTimerInterval);
-        const container = document.getElementById(`${prefix}-timer-container`);
-        const textEl = document.getElementById(`${prefix}-timer-text`);
-        const barEl = document.getElementById(`${prefix}-timer-bar`);
-        if(!container || !textEl || !barEl) return;
-        container.classList.remove('hidden');
+            clearInterval(globalTimerInterval);
+            const container = document.getElementById(`${prefix}-timer-container`);
+            const textEl = document.getElementById(`${prefix}-timer-text`);
+            const barEl = document.getElementById(`${prefix}-timer-bar`);
+            if(!container || !textEl || !barEl) return;
+            container.classList.remove('hidden');
+            
+            if (prefix === 'guest') updateGuestFormState(latestRoomData);
+            
+            globalTimerInterval = setInterval(() => {
+                const now = Date.now();
+                const remain = Math.max(0, deadline - now);
+                const remainSec = Math.ceil(remain / 1000);
+                textEl.textContent = `残り時間: ${remainSec}秒`;
+                const pct = (remain / (durationSec * 1000)) * 100;
+                barEl.style.width = `${pct}%`;
+                
+                if (pct > 50) { barEl.className = 'h-2 rounded-full transition-all duration-100 bg-green-500'; textEl.className = 'text-xs font-bold text-green-700'; }
+                else if (pct > 20) { barEl.className = 'h-2 rounded-full transition-all duration-100 bg-yellow-500'; textEl.className = 'text-xs font-bold text-yellow-700'; }
+                else { barEl.className = 'h-2 rounded-full transition-all duration-100 bg-red-500'; textEl.className = 'text-xs font-bold text-red-700'; }
 
-        if (prefix === 'guest') updateGuestFormState(latestRoomData);
-
-        globalTimerInterval = setInterval(() => {
-        const now = Date.now();
-        const remain = Math.max(0, deadline - now);
-        const remainSec = Math.ceil(remain / 1000);
-        textEl.textContent = `残り時間: ${remainSec}秒`;
-        const pct = (remain / (durationSec * 1000)) * 100;
-        barEl.style.width = `${pct}%`;
-
-        if (pct > 50) { barEl.className = 'h-2 rounded-full transition-all duration-100 bg-green-500'; textEl.className = 'text-xs font-bold text-green-700'; }
-        else if (pct > 20) { barEl.className = 'h-2 rounded-full transition-all duration-100 bg-yellow-500'; textEl.className = 'text-xs font-bold text-yellow-700'; }
-        else { barEl.className = 'h-2 rounded-full transition-all duration-100 bg-red-500'; textEl.className = 'text-xs font-bold text-red-700'; }
-
-        if (remain <= 0) {
-        clearInterval(globalTimerInterval);
-        textEl.textContent = `時間切れ！`;
-        if (prefix === 'guest') {
-        updateGuestFormState(latestRoomData);
-        }
-        }
-        }, 100);
+                if (remain <= 0) {
+                    clearInterval(globalTimerInterval);
+                    textEl.textContent = `時間切れ！`;
+                    if (prefix === 'guest') {
+                        updateGuestFormState(latestRoomData);
+                    }
+                }
+            }, 100);
         }
 
         // Util: Typewriter
         function startTypewriter(text, speedMs, elementId, onComplete, startTimeOverride = null) {
-        const dEl = document.getElementById(elementId);
-        if(!dEl) return;
-        dEl.textContent = '';
-        dEl.classList.add('typewriter-text');
-
-        typeStartTime = startTimeOverride || Date.now();
-        clearInterval(typeInterval);
-        charIndex = 0;
-
-        typeInterval = setInterval(() => {
-        const now = Date.now();
-        const elapsed = Math.max(0, now - typeStartTime);
-        const charsToShow = Math.floor(elapsed / speedMs);
-
-        if (charsToShow < text.length) {
-        dEl.textContent = text.substring(0, charsToShow);
-        charIndex = charsToShow;
-        } else {
-        dEl.textContent = text;
-        dEl.classList.remove('typewriter-text');
-        clearInterval(typeInterval);
-        charIndex = text.length;
-        if (onComplete) onComplete();
-        }
-        }, 50);
+            const dEl = document.getElementById(elementId);
+            if(!dEl) return;
+            dEl.textContent = '';
+            dEl.classList.add('typewriter-text');
+            
+            typeStartTime = startTimeOverride || Date.now();
+            clearInterval(typeInterval);
+            charIndex = 0;
+            
+            typeInterval = setInterval(() => {
+                const now = Date.now();
+                const elapsed = Math.max(0, now - typeStartTime);
+                const charsToShow = Math.floor(elapsed / speedMs);
+                
+                if (charsToShow < text.length) {
+                    dEl.textContent = text.substring(0, charsToShow);
+                    charIndex = charsToShow;
+                } else {
+                    dEl.textContent = text;
+                    dEl.classList.remove('typewriter-text');
+                    clearInterval(typeInterval);
+                    charIndex = text.length;
+                    if (onComplete) onComplete();
+                }
+            }, 50); 
         }
 
         // ==========================================
         // 2. INITIALIZATION
         // ==========================================
         async function init() {
-        await initFirebase();
-        loadLocalData();
-        setupEditorForm();
-        setupSpeedSlider();
+            await initFirebase();
+            loadLocalData();
+            setupEditorForm();
+            setupSpeedSlider();
         }
 
         async function initFirebase() {
-        if (Object.keys(firebaseConfig).length === 0 || !firebaseConfig.apiKey) {
-        const as = document.getElementById('auth-status');
-        if(as) as.textContent = "設定なし (ローカル専用)";
-        currentUser = { uid: "guest_" + Date.now() + Math.floor(Math.random()*1000) };
-        return;
-        }
-        const app = initializeApp(firebaseConfig);
-        auth = getAuth(app);
-        db = getFirestore(app);
+            if (Object.keys(firebaseConfig).length === 0 || !firebaseConfig.apiKey) {
+                const as = document.getElementById('auth-status');
+                if(as) as.textContent = "設定なし (ローカル専用)";
+                currentUser = { uid: "guest_" + Date.now() + Math.floor(Math.random()*1000) };
+                return;
+            }
+            const app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
 
-        onAuthStateChanged(auth, (user) => {
-        if(user) {
-        currentUser = user;
-        const statusEl = document.getElementById('auth-status');
-        if(statusEl) {
-        statusEl.textContent = `✅ ログイン済 (${user.uid.substring(0, 4)}...)`;
-        statusEl.classList.replace('text-slate-500', 'text-green-600');
-        }
-        const btnSave = document.getElementById('btn-save-cloud');
-        const btnLoad = document.getElementById('btn-load-cloud');
-        if(btnSave) btnSave.disabled = false;
-        if(btnLoad) btnLoad.disabled = false;
-        }
-        });
+            onAuthStateChanged(auth, (user) => {
+                if(user) {
+                    currentUser = user;
+                    const statusEl = document.getElementById('auth-status');
+                    if(statusEl) {
+                        statusEl.textContent = `✅ ログイン済 (${user.uid.substring(0, 4)}...)`;
+                        statusEl.classList.replace('text-slate-500', 'text-green-600');
+                    }
+                    const btnSave = document.getElementById('btn-save-cloud');
+                    const btnLoad = document.getElementById('btn-load-cloud');
+                    if(btnSave) btnSave.disabled = false;
+                    if(btnLoad) btnLoad.disabled = false;
+                }
+            });
 
-        const initAuth = async () => {
-        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-        await signInWithCustomToken(auth, __initial_auth_token);
-        } else {
-        await signInAnonymously(auth);
-        }
-        };
+            const initAuth = async () => {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            };
 
-        const delays = [1000, 2000, 4000, 8000, 16000];
-        for (let i = 0; i <= delays.length; i++) {
-        try {
-        await initAuth();
-        break;
-        } catch (e) {
-        if (i === delays.length) {
-        console.error("Auth init failed:", e);
-        if (!currentUser) currentUser = { uid: "guest_" + Date.now().toString(36) };
-        const statusEl = document.getElementById('auth-status');
-        if(statusEl) statusEl.textContent = "ログインエラー (リロード推奨)";
-        } else {
-        await new Promise(r => setTimeout(r, delays[i]));
-        }
-        }
-        }
+            const delays = [1000, 2000, 4000, 8000, 16000];
+            for (let i = 0; i <= delays.length; i++) {
+                try {
+                    await initAuth();
+                    break;
+                } catch (e) {
+                    if (i === delays.length) {
+                        console.error("Auth init failed:", e);
+                        if (!currentUser) currentUser = { uid: "guest_" + Date.now().toString(36) };
+                        const statusEl = document.getElementById('auth-status');
+                        if(statusEl) statusEl.textContent = "ログインエラー (リロード推奨)";
+                    } else {
+                        await new Promise(r => setTimeout(r, delays[i]));
+                    }
+                }
+            }
         }
 
         function loadLocalData() {
-        const saved = localStorage.getItem('pokemonQuizData');
-        if (saved) {
-        try {
-        let parsed = JSON.parse(saved);
-        questions = parsed.map(q => {
-        if (q.descEasy !== undefined) { q.desc = q.descEasy; q.difficulty = 'easy'; delete q.descEasy; delete q.descHard; }
-        if (!q.pokemonName) q.pokemonName = "未設定";
-        return q;
-        });
-        } catch(e) { questions = []; }
-        }
-        renderQuestionList();
-        updateChart();
+            const saved = localStorage.getItem('pokemonQuizData');
+            if (saved) {
+                try {
+                    let parsed = JSON.parse(saved);
+                    questions = parsed.map(q => {
+                        if (q.descEasy !== undefined) { q.desc = q.descEasy; q.difficulty = 'easy'; delete q.descEasy; delete q.descHard; }
+                        if (!q.pokemonName) q.pokemonName = "未設定";
+                        return q;
+                    });
+                } catch(e) { questions = []; }
+            }
+            renderQuestionList();
+            updateChart();
         }
 
         function saveLocalData() {
-        localStorage.setItem('pokemonQuizData', JSON.stringify(questions));
+            localStorage.setItem('pokemonQuizData', JSON.stringify(questions));
         }
 
         // ==========================================
         // 3. CLOUD SYNC (Questions)
         // ==========================================
         window.saveToCloud = async function() {
-        if (!currentUser || currentUser.uid.startsWith("guest_")) { await showModal("ログインしていません"); return; }
-        if (questions.length === 0) { if (!await showModal("問題が0件です。クラウドを空にしますか？", true)) return; }
-        const btn = document.getElementById('btn-save-cloud');
-        if(btn) { btn.disabled = true; btn.textContent = "保存中..."; }
+            if (!currentUser || currentUser.uid.startsWith("guest_")) { await showModal("ログインしていません"); return; }
+            if (questions.length === 0) { if (!await showModal("問題が0件です。クラウドを空にしますか？", true)) return; }
+            const btn = document.getElementById('btn-save-cloud');
+            if(btn) { btn.disabled = true; btn.textContent = "保存中..."; }
 
-        try {
-        const colRef = collection(db, 'artifacts', appId, 'users', currentUser.uid, 'questions');
-        const snapshot = await getDocs(colRef);
-        await Promise.all(snapshot.docs.map(docSnap => deleteDoc(docSnap.ref)));
-        await Promise.all(questions.map(q => setDoc(doc(colRef, q.id.toString()), q)));
-        await showModal("保存完了！");
-        } catch (e) { await showModal("保存エラー"); }
-        finally { if(btn) { btn.disabled = false; btn.textContent = "今すぐ保存"; } }
+            try {
+                const colRef = collection(db, 'artifacts', appId, 'users', currentUser.uid, 'questions');
+                const snapshot = await getDocs(colRef);
+                await Promise.all(snapshot.docs.map(docSnap => deleteDoc(docSnap.ref)));
+                await Promise.all(questions.map(q => setDoc(doc(colRef, q.id.toString()), q)));
+                await showModal("保存完了！");
+            } catch (e) { await showModal("保存エラー"); } 
+            finally { if(btn) { btn.disabled = false; btn.textContent = "今すぐ保存"; } }
         };
 
         window.loadFromCloud = async function() {
-        if (!currentUser || currentUser.uid.startsWith("guest_")) { await showModal("ログインしていません"); return; }
-        const btn = document.getElementById('btn-load-cloud');
-        if(btn) { btn.disabled = true; btn.textContent = "読込中..."; }
-        try {
-        const colRef = collection(db, 'artifacts', appId, 'users', currentUser.uid, 'questions');
-        const snapshot = await getDocs(colRef);
-        if (snapshot.empty) { await showModal("データがありません"); return; }
-        const loaded = [];
-        snapshot.forEach(d => loaded.push(d.data()));
-        loaded.sort((a, b) => a.id - b.id);
-
-        if (await showModal("上書きしますか？", true)) {
-        questions = loaded;
-        cancelEdit();
-        saveLocalData();
-        renderQuestionList();
-        updateChart();
-        await showModal("読込完了！");
-        }
-        } catch(e) { await showModal("読込エラー"); }
-        finally { if(btn) { btn.disabled = false; btn.textContent = "クラウド読込"; } }
+            if (!currentUser || currentUser.uid.startsWith("guest_")) { await showModal("ログインしていません"); return; }
+            const btn = document.getElementById('btn-load-cloud');
+            if(btn) { btn.disabled = true; btn.textContent = "読込中..."; }
+            try {
+                const colRef = collection(db, 'artifacts', appId, 'users', currentUser.uid, 'questions');
+                const snapshot = await getDocs(colRef);
+                if (snapshot.empty) { await showModal("データがありません"); return; }
+                const loaded = [];
+                snapshot.forEach(d => loaded.push(d.data()));
+                loaded.sort((a, b) => a.id - b.id);
+                
+                if (await showModal("上書きしますか？", true)) {
+                    questions = loaded;
+                    cancelEdit();
+                    saveLocalData();
+                    renderQuestionList();
+                    updateChart();
+                    await showModal("読込完了！");
+                }
+            } catch(e) { await showModal("読込エラー"); } 
+            finally { if(btn) { btn.disabled = false; btn.textContent = "クラウド読込"; } }
         };
 
         // ==========================================
         // 4. EDITOR LOGIC & PokeAPI
         // ==========================================
         window.switchMode = function(mode) {
-        currentMode = mode;
-        ['editor', 'quiz', 'guest'].forEach(m => {
-        const view = document.getElementById(`view-${m}`);
-        if(view) view.classList.add('hidden');
-        const tab = document.getElementById(`tab-${m}`);
-        if(tab) {
-        tab.classList.replace('bg-white', 'bg-red-700');
-        tab.classList.replace('text-red-600', 'text-white');
-        }
-        });
-        const vMode = document.getElementById(`view-${mode}`);
-        if(vMode) vMode.classList.remove('hidden');
-        const activeTab = document.getElementById(`tab-${mode}`);
-        if(activeTab) {
-        activeTab.classList.replace('bg-red-700', 'bg-white');
-        activeTab.classList.replace('text-white', 'text-red-600');
-        }
+            currentMode = mode;
+            ['editor', 'quiz', 'guest'].forEach(m => {
+                const view = document.getElementById(`view-${m}`);
+                if(view) view.classList.add('hidden');
+                const tab = document.getElementById(`tab-${m}`);
+                if(tab) {
+                    tab.classList.replace('bg-white', 'bg-red-700');
+                    tab.classList.replace('text-red-600', 'text-white');
+                }
+            });
+            const vMode = document.getElementById(`view-${mode}`);
+            if(vMode) vMode.classList.remove('hidden');
+            const activeTab = document.getElementById(`tab-${mode}`);
+            if(activeTab) {
+                activeTab.classList.replace('bg-red-700', 'bg-white');
+                activeTab.classList.replace('text-white', 'text-red-600');
+            }
 
-        if (mode === 'editor') {
-        if(activeRoomId && isHost) closeRoom();
-        if(activeRoomId && !isHost) leaveRoom();
-        } else if (mode === 'quiz') {
-        if(activeRoomId && !isHost) leaveRoom();
-        prepareHostQuizView();
-        } else if (mode === 'guest') {
-        if(activeRoomId && isHost) closeRoom();
-        resetGuestView();
-        }
+            if (mode === 'editor') {
+                if(activeRoomId && isHost) closeRoom();
+                if(activeRoomId && !isHost) leaveRoom();
+            } else if (mode === 'quiz') {
+                if(activeRoomId && !isHost) leaveRoom();
+                prepareHostQuizView();
+            } else if (mode === 'guest') {
+                if(activeRoomId && isHost) closeRoom();
+                resetGuestView();
+            }
         };
 
         function setupEditorForm() {
-        const inputImg = document.getElementById('input-image');
-        if(inputImg) {
-        inputImg.addEventListener('change', (e) => {
-        if (e.target.files[0]) {
-        const reader = new FileReader();
-        reader.onload = (ev) => compressImage(ev.target.result, 300, (b64) => {
-        currentImageBase64 = b64;
-        const pImg = document.getElementById('preview-image');
-        if(pImg) { pImg.src = b64; pImg.classList.remove('hidden'); }
-        const pPlace = document.getElementById('preview-placeholder');
-        if(pPlace) pPlace.classList.add('hidden');
-        });
-        reader.readAsDataURL(e.target.files[0]);
-        } else clearPreviewImage();
-        });
-        }
+            const inputImg = document.getElementById('input-image');
+            if(inputImg) {
+                inputImg.addEventListener('change', (e) => {
+                    if (e.target.files[0]) {
+                        const reader = new FileReader();
+                        reader.onload = (ev) => compressImage(ev.target.result, 300, (b64) => {
+                            currentImageBase64 = b64;
+                            const pImg = document.getElementById('preview-image');
+                            if(pImg) { pImg.src = b64; pImg.classList.remove('hidden'); }
+                            const pPlace = document.getElementById('preview-placeholder');
+                            if(pPlace) pPlace.classList.add('hidden');
+                        });
+                        reader.readAsDataURL(e.target.files[0]);
+                    } else clearPreviewImage();
+                });
+            }
 
-        const quizForm = document.getElementById('quiz-form');
-        if(quizForm) {
-        quizForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        if (!currentImageBase64) { await showModal('画像が必要です'); return; }
-        const diffRadio = document.querySelector('input[name="difficulty"]:checked');
-        const diff = diffRadio ? diffRadio.value : 'easy';
-        const qData = {
-        id: editingIndex !== null ? questions[editingIndex].id : Date.now(),
-        pokemonName: document.getElementById('input-pokemon-name').value.trim(),
-        difficulty: diff,
-        desc: document.getElementById('input-desc').value.trim(),
-        category: document.getElementById('input-category').value.trim(),
-        type: document.getElementById('input-type').value.trim(),
-        image: currentImageBase64
-        };
-        if (editingIndex !== null) { questions[editingIndex] = qData; cancelEdit(); }
-        else {
-        questions.push(qData);
-        e.target.reset();
-        clearPreviewImage();
-        const qList = document.getElementById('question-list');
-        if(qList) setTimeout(() => qList.scrollTop = 9999, 50);
-        }
-        saveLocalData();
-        renderQuestionList();
-        updateChart();
-        });
-        }
+            const quizForm = document.getElementById('quiz-form');
+            if(quizForm) {
+                quizForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    if (!currentImageBase64) { await showModal('画像が必要です'); return; }
+                    const diffRadio = document.querySelector('input[name="difficulty"]:checked');
+                    const diff = diffRadio ? diffRadio.value : 'easy';
+                    const qData = {
+                        id: editingIndex !== null ? questions[editingIndex].id : Date.now(),
+                        pokemonName: document.getElementById('input-pokemon-name').value.trim(),
+                        difficulty: diff,
+                        desc: document.getElementById('input-desc').value.trim(),
+                        category: document.getElementById('input-category').value.trim(),
+                        type: document.getElementById('input-type').value.trim(),
+                        image: currentImageBase64
+                    };
+                    if (editingIndex !== null) { questions[editingIndex] = qData; cancelEdit(); } 
+                    else {
+                        questions.push(qData);
+                        e.target.reset();
+                        clearPreviewImage();
+                        const qList = document.getElementById('question-list');
+                        if(qList) setTimeout(() => qList.scrollTop = 9999, 50);
+                    }
+                    saveLocalData();
+                    renderQuestionList();
+                    updateChart();
+                });
+            }
         }
 
         function clearPreviewImage() {
-        currentImageBase64 = null;
-        const pImg = document.getElementById('preview-image');
-        if(pImg) { pImg.classList.add('hidden'); pImg.src = ''; }
-        const pPlace = document.getElementById('preview-placeholder');
-        if(pPlace) pPlace.classList.remove('hidden');
-        const inImg = document.getElementById('input-image');
-        if(inImg) inImg.value = '';
+            currentImageBase64 = null;
+            const pImg = document.getElementById('preview-image');
+            if(pImg) { pImg.classList.add('hidden'); pImg.src = ''; }
+            const pPlace = document.getElementById('preview-placeholder');
+            if(pPlace) pPlace.classList.remove('hidden');
+            const inImg = document.getElementById('input-image');
+            if(inImg) inImg.value = '';
         }
 
         window.cancelEdit = function() {
-        editingIndex = null;
-        const qForm = document.getElementById('quiz-form');
-        if(qForm) qForm.reset();
-        clearPreviewImage();
-        const fTitle = document.getElementById('form-title');
-        if(fTitle) fTitle.textContent = '➕ 新しい問題';
-        const eBadge = document.getElementById('edit-badge');
-        if(eBadge) eBadge.classList.add('hidden');
-        const bSubmit = document.getElementById('btn-submit');
-        if(bSubmit) bSubmit.textContent = 'リストに追加';
-        const bCancel = document.getElementById('btn-cancel');
-        if(bCancel) bCancel.classList.add('hidden');
-        renderQuestionList();
+            editingIndex = null;
+            const qForm = document.getElementById('quiz-form');
+            if(qForm) qForm.reset();
+            clearPreviewImage();
+            const fTitle = document.getElementById('form-title');
+            if(fTitle) fTitle.textContent = '➕ 新しい問題';
+            const eBadge = document.getElementById('edit-badge');
+            if(eBadge) eBadge.classList.add('hidden');
+            const bSubmit = document.getElementById('btn-submit');
+            if(bSubmit) bSubmit.textContent = 'リストに追加';
+            const bCancel = document.getElementById('btn-cancel');
+            if(bCancel) bCancel.classList.add('hidden');
+            renderQuestionList();
         };
 
         window.fetchPokemonData = async function() {
-        const rawInput = document.getElementById('auto-search-name').value.trim();
-        const msgEl = document.getElementById('fetch-msg');
-        const btnText = document.getElementById('fetch-text');
-        if (!rawInput) { if(msgEl) {msgEl.textContent='名前を入力して下さい'; msgEl.classList.remove('hidden');} return; }
+            const rawInput = document.getElementById('auto-search-name').value.trim();
+            const msgEl = document.getElementById('fetch-msg');
+            const btnText = document.getElementById('fetch-text');
+            if (!rawInput) { if(msgEl) {msgEl.textContent='名前を入力して下さい'; msgEl.classList.remove('hidden');} return; }
+            
+            if(msgEl) msgEl.classList.add('hidden');
+            const fLoader = document.getElementById('fetch-loader');
+            if(fLoader) fLoader.classList.remove('hidden');
+            if(btnText) btnText.textContent = '取得中...';
+            const bAuto = document.getElementById('btn-auto-fetch');
+            if(bAuto) bAuto.disabled = true;
 
-        if(msgEl) msgEl.classList.add('hidden');
-        const fLoader = document.getElementById('fetch-loader');
-        if(fLoader) fLoader.classList.remove('hidden');
-        if(btnText) btnText.textContent = '取得中...';
-        const bAuto = document.getElementById('btn-auto-fetch');
-        if(bAuto) bAuto.disabled = true;
+            let baseName = rawInput.split(/[\s　]+/)[0];
+            let formKeyword = "", formNameJP = "";
+            if (rawInput.includes("アローラ")) { formKeyword = "alola"; formNameJP = "アローラのすがた"; baseName = baseName.replace("アローラ",""); }
+            else if (rawInput.includes("ガラル")) { formKeyword = "galar"; formNameJP = "ガラルのすがた"; baseName = baseName.replace("ガラル",""); }
+            else if (rawInput.includes("ヒスイ")) { formKeyword = "hisui"; formNameJP = "ヒスイのすがた"; baseName = baseName.replace("ヒスイ",""); }
+            else if (rawInput.includes("パルデア")) { formKeyword = "paldea"; formNameJP = "パルデアのすがた"; baseName = baseName.replace("パルデア",""); }
+            else if (rawInput.includes("メガ")) { formKeyword = "mega"; formNameJP = "メガシンカ"; baseName = baseName.replace("メガ",""); }
 
-        let baseName = rawInput.split(/[\s　]+/)[0];
-        let formKeyword = "", formNameJP = "";
-        if (rawInput.includes("アローラ")) { formKeyword = "alola"; formNameJP = "アローラのすがた"; baseName = baseName.replace("アローラ",""); }
-        else if (rawInput.includes("ガラル")) { formKeyword = "galar"; formNameJP = "ガラルのすがた"; baseName = baseName.replace("ガラル",""); }
-        else if (rawInput.includes("ヒスイ")) { formKeyword = "hisui"; formNameJP = "ヒスイのすがた"; baseName = baseName.replace("ヒスイ",""); }
-        else if (rawInput.includes("パルデア")) { formKeyword = "paldea"; formNameJP = "パルデアのすがた"; baseName = baseName.replace("パルデア",""); }
-        else if (rawInput.includes("メガ")) { formKeyword = "mega"; formNameJP = "メガシンカ"; baseName = baseName.replace("メガ",""); }
+            try {
+                const query = `query getP($name:String!){ pokemon_v2_pokemonspecies(where:{pokemon_v2_pokemonspeciesnames:{name:{_eq:$name},language_id:{_in:[1,11]}}}){ id pokemon_v2_pokemonspeciesnames(where:{language_id:{_in:[1,11]}}){ genus } pokemon_v2_pokemonspeciesflavortexts(where:{language_id:{_in:[1,11]}},order_by:{version_id:desc}){ flavor_text pokemon_v2_version{name} } pokemon_v2_pokemons{ id name pokemon_v2_pokemontypes{ pokemon_v2_type{ pokemon_v2_typenames(where:{language_id:{_in:[1,11]}}){name} } } } } }`;
+                const res = await fetch('https://beta.pokeapi.co/graphql/v1beta', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({query, variables:{name:baseName}}) });
+                const data = await res.json();
+                const speciesArr = data.data?.pokemon_v2_pokemonspecies;
+                if (!speciesArr || speciesArr.length === 0) throw new Error('見つかりません');
+                const species = speciesArr[0];
+                
+                let selectedP = species.pokemon_v2_pokemons[0];
+                if (formKeyword) selectedP = species.pokemon_v2_pokemons.find(p=>p.name.includes(formKeyword)) || selectedP;
 
-        try {
-        const query = `query getP($name:String!){ pokemon_v2_pokemonspecies(where:{pokemon_v2_pokemonspeciesnames:{name:{_eq:$name},language_id:{_in:[1,11]}}}){ id pokemon_v2_pokemonspeciesnames(where:{language_id:{_in:[1,11]}}){ genus } pokemon_v2_pokemonspeciesflavortexts(where:{language_id:{_in:[1,11]}},order_by:{version_id:desc}){ flavor_text pokemon_v2_version{name} } pokemon_v2_pokemons{ id name pokemon_v2_pokemontypes{ pokemon_v2_type{ pokemon_v2_typenames(where:{language_id:{_in:[1,11]}}){name} } } } } }`;
-        const res = await fetch('https://beta.pokeapi.co/graphql/v1beta', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({query, variables:{name:baseName}}) });
-        const data = await res.json();
-        const speciesArr = data.data?.pokemon_v2_pokemonspecies;
-        if (!speciesArr || speciesArr.length === 0) throw new Error('見つかりません');
-        const species = speciesArr[0];
+                let category = species.pokemon_v2_pokemonspeciesnames.find(n=>n.genus)?.genus || '';
+                
+                if(btnText) btnText.textContent = '画像...';
+                const imgB64 = await new Promise(async r => {
+                    const blob = await (await fetch(`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${selectedP.id}.png`)).blob();
+                    const reader = new FileReader(); reader.onloadend = () => compressImage(reader.result, 300, r); reader.readAsDataURL(blob);
+                });
 
-        let selectedP = species.pokemon_v2_pokemons[0];
-        if (formKeyword) selectedP = species.pokemon_v2_pokemons.find(p=>p.name.includes(formKeyword)) || selectedP;
+                let fTexts = species.pokemon_v2_pokemonspeciesflavortexts;
+                let easyDesc = "", hardDesc = "", typeStr = "";
 
-        let category = species.pokemon_v2_pokemonspeciesnames.find(n=>n.genus)?.genus || '';
+                if (fTexts.length === 0 || !category) {
+                    if(btnText) btnText.textContent = 'Wiki...';
+                    try {
+                        const wikiUrl = `https://wiki.xn--rckteqa2e.com/wiki/${encodeURIComponent(baseName)}`;
+                        let html = null;
+                        for (let proxy of [`https://api.allorigins.win/get?url=${encodeURIComponent(wikiUrl)}`, `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(wikiUrl)}`]) {
+                            try { const pr = await fetch(proxy); if(pr.ok) { if(proxy.includes('all')) html = (await pr.json()).contents; else html = await pr.text(); break; } } catch(e){}
+                        }
+                        if(html) {
+                            const doc = new DOMParser().parseFromString(html, "text/html");
+                            if(!category) { const th=Array.from(doc.querySelectorAll('th')).find(t=>t.textContent.includes('分類')); if(th?.nextElementSibling) category = th.nextElementSibling.textContent.replace(/\[\d+\]/g,'').trim(); }
+                            const tTh=Array.from(doc.querySelectorAll('th')).find(t=>t.textContent.includes('タイプ')&&!t.textContent.includes('タマゴ'));
+                            if(tTh?.nextElementSibling) typeStr = Array.from(tTh.nextElementSibling.querySelectorAll('a')).map(a=>a.textContent.trim()).filter(t=>t!=='タイプ'&&t!=='・').join(' / ');
+                            
+                            if(fTexts.length === 0) {
+                                const h=Array.from(doc.querySelectorAll('h2,h3')).find(hl=>hl.textContent.includes('図鑑'));
+                                if(h) {
+                                    let el=h.nextElementSibling, txts=[];
+                                    while(el && !['H2','H3'].includes(el.tagName)) {
+                                        if(el.tagName==='TABLE') {
+                                            for(let r of el.querySelectorAll('tr')) {
+                                                let isT = !formNameJP;
+                                                const fTh=r.querySelector('th[colspan]');
+                                                if(fTh) { if(formNameJP&&fTh.textContent.includes(formNameJP)) isT=true; else if(formNameJP&&!fTh.textContent.includes(formNameJP)&&(fTh.textContent.includes('のすがた')||fTh.textContent.includes('メガ'))) isT=false; }
+                                                if(isT) { for(let td of r.querySelectorAll('td')) { let t=td.textContent.replace(/\[\d+\]/g,'').replace(/[\n\r]/g,' ').trim(); if(t.length>10&&!t.includes('ポケモン')&&!t.includes('高さ')) txts.push(t); } }
+                                            }
+                                        }
+                                        el=el.nextElementSibling;
+                                    }
+                                    if(txts.length>0) { let u=[...new Set(txts)]; easyDesc=u[0]; hardDesc=u[u.length-1]; }
+                                }
+                            }
+                        }
+                    } catch(e){}
+                }
 
-        if(btnText) btnText.textContent = '画像...';
-        const imgB64 = await new Promise(async r => {
-        const blob = await (await fetch(`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${selectedP.id}.png`)).blob();
-        const reader = new FileReader(); reader.onloadend = () => compressImage(reader.result, 300, r); reader.readAsDataURL(blob);
-        });
+                if(!category) category = 'ふめい';
+                if(fTexts.length > 0) {
+                    let uTexts = [...new Set(fTexts.map(f=>f.flavor_text.replace(/[\n\f\r\t]/g,' ').trim()))].filter(t=>t);
+                    if(uTexts.length===1) { easyDesc=uTexts[0]; hardDesc=uTexts[0]; }
+                    else if(uTexts.length>1) {
+                        const kw = ['色','赤','青','緑','丸','角','尻尾','羽','目','顔','腕','足','大','小','体','毛','牙','爪','模様','甲羅'];
+                        uTexts.sort((a,b) => kw.reduce((c,k)=>c+(b.includes(k)?1:0),0) - kw.reduce((c,k)=>c+(a.includes(k)?1:0),0) || b.length - a.length);
+                        easyDesc=uTexts[0]; hardDesc=uTexts[uTexts.length-1];
+                    }
+                }
+                if(!typeStr) typeStr = (selectedP.pokemon_v2_pokemontypes||[]).map(t=>t.pokemon_v2_type.pokemon_v2_typenames?.[0]?.name).filter(Boolean).join(' / ') || 'ふめい';
 
-        let fTexts = species.pokemon_v2_pokemonspeciesflavortexts;
-        let easyDesc = "", hardDesc = "", typeStr = "";
+                const iName = document.getElementById('input-pokemon-name'); if(iName) iName.value = baseName + (formNameJP ? ` (${formNameJP})` : "");
+                const iCat = document.getElementById('input-category'); if(iCat) iCat.value = category;
+                const iType = document.getElementById('input-type'); if(iType) iType.value = typeStr;
+                const dRadio = document.querySelector('input[name="difficulty"]:checked');
+                const iDesc = document.getElementById('input-desc');
+                if(iDesc && dRadio) iDesc.value = dRadio.value==='easy' ? easyDesc : hardDesc;
+                
+                currentImageBase64 = imgB64;
+                const pImg = document.getElementById('preview-image');
+                if(pImg) { pImg.src = imgB64; pImg.classList.remove('hidden'); }
+                const pPlace = document.getElementById('preview-placeholder');
+                if(pPlace) pPlace.classList.add('hidden');
 
-        if (fTexts.length === 0 || !category) {
-        if(btnText) btnText.textContent = 'Wiki...';
-        try {
-        const wikiUrl = `https://wiki.xn--rckteqa2e.com/wiki/${encodeURIComponent(baseName)}`;
-        let html = null;
-        for (let proxy of [`https://api.allorigins.win/get?url=${encodeURIComponent(wikiUrl)}`, `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(wikiUrl)}`]) {
-        try { const pr = await fetch(proxy); if(pr.ok) { if(proxy.includes('all')) html = (await pr.json()).contents; else html = await pr.text(); break; } } catch(e){}
-        }
-        if(html) {
-        const doc = new DOMParser().parseFromString(html, "text/html");
-        if(!category) { const th=Array.from(doc.querySelectorAll('th')).find(t=>t.textContent.includes('分類')); if(th?.nextElementSibling) category = th.nextElementSibling.textContent.replace(/\[\d+\]/g,'').trim(); }
-        const tTh=Array.from(doc.querySelectorAll('th')).find(t=>t.textContent.includes('タイプ')&&!t.textContent.includes('タマゴ'));
-        if(tTh?.nextElementSibling) typeStr = Array.from(tTh.nextElementSibling.querySelectorAll('a')).map(a=>a.textContent.trim()).filter(t=>t!=='タイプ'&&t!=='・').join(' / ');
-
-        if(fTexts.length === 0) {
-        const h=Array.from(doc.querySelectorAll('h2,h3')).find(hl=>hl.textContent.includes('図鑑'));
-        if(h) {
-        let el=h.nextElementSibling, txts=[];
-        while(el && !['H2','H3'].includes(el.tagName)) {
-        if(el.tagName==='TABLE') {
-        for(let r of el.querySelectorAll('tr')) {
-        let isT = !formNameJP;
-        const fTh=r.querySelector('th[colspan]');
-        if(fTh) { if(formNameJP&&fTh.textContent.includes(formNameJP)) isT=true; else if(formNameJP&&!fTh.textContent.includes(formNameJP)&&(fTh.textContent.includes('のすがた')||fTh.textContent.includes('メガ'))) isT=false; }
-        if(isT) { for(let td of r.querySelectorAll('td')) { let t=td.textContent.replace(/\[\d+\]/g,'').replace(/[\n\r]/g,' ').trim(); if(t.length>10&&!t.includes('ポケモン')&&!t.includes('高さ')) txts.push(t); } }
-        }
-        }
-        el=el.nextElementSibling;
-        }
-        if(txts.length>0) { let u=[...new Set(txts)]; easyDesc=u[0]; hardDesc=u[u.length-1]; }
-        }
-        }
-        }
-        } catch(e){}
-        }
-
-        if(!category) category = 'ふめい';
-        if(fTexts.length > 0) {
-        let uTexts = [...new Set(fTexts.map(f=>f.flavor_text.replace(/[\n\f\r\t]/g,' ').trim()))].filter(t=>t);
-        if(uTexts.length===1) { easyDesc=uTexts[0]; hardDesc=uTexts[0]; }
-        else if(uTexts.length>1) {
-        const kw = ['色','赤','青','緑','丸','角','尻尾','羽','目','顔','腕','足','大','小','体','毛','牙','爪','模様','甲羅'];
-        uTexts.sort((a,b) => kw.reduce((c,k)=>c+(b.includes(k)?1:0),0) - kw.reduce((c,k)=>c+(a.includes(k)?1:0),0) || b.length - a.length);
-        easyDesc=uTexts[0]; hardDesc=uTexts[uTexts.length-1];
-        }
-        }
-        if(!typeStr) typeStr = (selectedP.pokemon_v2_pokemontypes||[]).map(t=>t.pokemon_v2_type.pokemon_v2_typenames?.[0]?.name).filter(Boolean).join(' / ') || 'ふめい';
-
-        const iName = document.getElementById('input-pokemon-name'); if(iName) iName.value = baseName + (formNameJP ? ` (${formNameJP})` : "");
-        const iCat = document.getElementById('input-category'); if(iCat) iCat.value = category;
-        const iType = document.getElementById('input-type'); if(iType) iType.value = typeStr;
-        const dRadio = document.querySelector('input[name="difficulty"]:checked');
-        const iDesc = document.getElementById('input-desc');
-        if(iDesc && dRadio) iDesc.value = dRadio.value==='easy' ? easyDesc : hardDesc;
-
-        currentImageBase64 = imgB64;
-        const pImg = document.getElementById('preview-image');
-        if(pImg) { pImg.src = imgB64; pImg.classList.remove('hidden'); }
-        const pPlace = document.getElementById('preview-placeholder');
-        if(pPlace) pPlace.classList.add('hidden');
-
-        if(msgEl) { msgEl.textContent = '取得成功！'; msgEl.className = 'text-xs text-green-600 mt-2'; msgEl.classList.remove('hidden'); }
-        setTimeout(() => { if(msgEl) msgEl.classList.add('hidden'); }, 3000);
-        } catch(e) {
-        if(msgEl) { msgEl.textContent = e.message; msgEl.className = 'text-xs text-red-500 mt-2'; msgEl.classList.remove('hidden'); }
-        } finally {
-        if(fLoader) fLoader.classList.add('hidden');
-        if(btnText) btnText.textContent = '取得';
-        if(bAuto) bAuto.disabled = false;
-        }
+                if(msgEl) { msgEl.textContent = '取得成功！'; msgEl.className = 'text-xs text-green-600 mt-2'; msgEl.classList.remove('hidden'); }
+                setTimeout(() => { if(msgEl) msgEl.classList.add('hidden'); }, 3000);
+            } catch(e) {
+                if(msgEl) { msgEl.textContent = e.message; msgEl.className = 'text-xs text-red-500 mt-2'; msgEl.classList.remove('hidden'); }
+            } finally {
+                if(fLoader) fLoader.classList.add('hidden');
+                if(btnText) btnText.textContent = '取得'; 
+                if(bAuto) bAuto.disabled = false;
+            }
         };
 
         window.deleteQuestion = async function(idx) { if(await showModal('削除しますか？',true)){ questions.splice(idx,1); if(editingIndex===idx) cancelEdit(); else if(editingIndex!==null && editingIndex>idx) editingIndex--; saveLocalData(); renderQuestionList(); updateChart(); } };
         window.clearAllQuestions = async function() { if(questions.length===0) return; if(await showModal('全て削除しますか？',true)){ questions=[]; cancelEdit(); saveLocalData(); renderQuestionList(); updateChart(); } };
         window.moveQuestion = function(idx, d) {
-        if((d===-1&&idx>0) || (d===1&&idx<questions.length-1)) {
-        [questions[idx], questions[idx+d]] = [questions[idx+d], questions[idx]];
-        if(editingIndex===idx) editingIndex+=d; else if(editingIndex!==null && editingIndex===idx+d) editingIndex=idx;
-        saveLocalData(); renderQuestionList();
-        }
+            if((d===-1&&idx>0) || (d===1&&idx<questions.length-1)) {
+                [questions[idx], questions[idx+d]] = [questions[idx+d], questions[idx]];
+                if(editingIndex===idx) editingIndex+=d; else if(editingIndex!==null && editingIndex===idx+d) editingIndex=idx;
+                saveLocalData(); renderQuestionList();
+            }
         };
         window.editQuestion = function(idx) {
-        editingIndex = idx; const q = questions[idx];
-        const iName = document.getElementById('input-pokemon-name'); if(iName) iName.value = q.pokemonName;
-        const diffRad = document.querySelector(`input[name="difficulty"][value="${q.difficulty||'easy'}"]`); if(diffRad) diffRad.checked = true;
-        const iDesc = document.getElementById('input-desc'); if(iDesc) iDesc.value = q.desc;
-        const iCat = document.getElementById('input-category'); if(iCat) iCat.value = q.category;
-        const iType = document.getElementById('input-type'); if(iType) iType.value = q.type;
-        currentImageBase64 = q.image;
-        const pImg = document.getElementById('preview-image'); if(pImg) { pImg.src = q.image; pImg.classList.remove('hidden'); }
-        const pPlace = document.getElementById('preview-placeholder'); if(pPlace) pPlace.classList.add('hidden');
-
-        const fTitle = document.getElementById('form-title'); if(fTitle) fTitle.textContent = '✏️ 編集';
-        const eBadge = document.getElementById('edit-badge'); if(eBadge) eBadge.classList.remove('hidden');
-        const bSub = document.getElementById('btn-submit'); if(bSub) bSub.textContent = '保存';
-        const bCan = document.getElementById('btn-cancel'); if(bCan) bCan.classList.remove('hidden');
-        renderQuestionList();
-        const qForm = document.getElementById('quiz-form'); if(qForm) qForm.scrollIntoView({behavior:'smooth'});
+            editingIndex = idx; const q = questions[idx];
+            const iName = document.getElementById('input-pokemon-name'); if(iName) iName.value = q.pokemonName;
+            const diffRad = document.querySelector(`input[name="difficulty"][value="${q.difficulty||'easy'}"]`); if(diffRad) diffRad.checked = true;
+            const iDesc = document.getElementById('input-desc'); if(iDesc) iDesc.value = q.desc;
+            const iCat = document.getElementById('input-category'); if(iCat) iCat.value = q.category;
+            const iType = document.getElementById('input-type'); if(iType) iType.value = q.type;
+            currentImageBase64 = q.image; 
+            const pImg = document.getElementById('preview-image'); if(pImg) { pImg.src = q.image; pImg.classList.remove('hidden'); }
+            const pPlace = document.getElementById('preview-placeholder'); if(pPlace) pPlace.classList.add('hidden');
+            
+            const fTitle = document.getElementById('form-title'); if(fTitle) fTitle.textContent = '✏️ 編集';
+            const eBadge = document.getElementById('edit-badge'); if(eBadge) eBadge.classList.remove('hidden');
+            const bSub = document.getElementById('btn-submit'); if(bSub) bSub.textContent = '保存';
+            const bCan = document.getElementById('btn-cancel'); if(bCan) bCan.classList.remove('hidden');
+            renderQuestionList(); 
+            const qForm = document.getElementById('quiz-form'); if(qForm) qForm.scrollIntoView({behavior:'smooth'});
         };
 
         function renderQuestionList() {
-        const list = document.getElementById('question-list');
-        if(!list) return;
-        const qc = document.getElementById('question-count');
-        if(qc) qc.textContent = questions.length;
-        if(questions.length===0) { list.innerHTML='<div class="text-center text-slate-400 py-10 text-sm">問題がありません</div>'; return; }
-        list.innerHTML='';
-        questions.forEach((q, i) => {
-        const item = document.createElement('div');
-        const isEd = (editingIndex === i);
-        item.className = `p-2 rounded flex justify-between items-center border ${isEd?'bg-yellow-50 border-yellow-300':'bg-slate-50 border-slate-200'}`;
-        const diffBadge = q.difficulty==='hard'?'<span class="text-[9px] bg-red-100 text-red-700 px-1 rounded ml-1 flex-shrink-0">難</span>':'<span class="text-[9px] bg-blue-100 text-blue-700 px-1 rounded ml-1 flex-shrink-0">易</span>';
-        item.innerHTML = `
-        <div class="flex items-center space-x-2 overflow-hidden w-full">
-        <span class="font-bold text-slate-400 text-xs w-4 flex-shrink-0">${i+1}.</span>
-        <img src="${q.image}" class="w-8 h-8 object-contain bg-white border rounded p-0.5 flex-shrink-0">
-        <div class="flex flex-col min-w-0 flex-grow">
-        <span class="font-bold text-slate-700 text-xs truncate flex items-center">${q.pokemonName} ${diffBadge}</span>
-        <span class="text-[9px] text-slate-500 truncate">${q.category} / ${q.type}</span>
-        </div>
-        </div>
-        <div class="flex space-x-1 flex-shrink-0 ml-2">
-        <button onclick="editQuestion(${i})" class="p-1 text-blue-500 hover:bg-blue-100 rounded">✏️</button>
-        <button onclick="moveQuestion(${i},-1)" class="p-1 text-slate-400 hover:bg-slate-200 rounded" ${i===0?'disabled':''}>⬆️</button>
-        <button onclick="moveQuestion(${i},1)" class="p-1 text-slate-400 hover:bg-slate-200 rounded" ${i===questions.length-1?'disabled':''}>⬇️</button>
-        <button onclick="deleteQuestion(${i})" class="p-1 text-red-400 hover:bg-red-100 rounded">❌</button>
-        </div>`;
-        list.appendChild(item);
-        });
+            const list = document.getElementById('question-list');
+            if(!list) return;
+            const qc = document.getElementById('question-count');
+            if(qc) qc.textContent = questions.length;
+            if(questions.length===0) { list.innerHTML='<div class="text-center text-slate-400 py-10 text-sm">問題がありません</div>'; return; }
+            list.innerHTML='';
+            questions.forEach((q, i) => {
+                const item = document.createElement('div');
+                const isEd = (editingIndex === i);
+                item.className = `p-2 rounded flex justify-between items-center border ${isEd?'bg-yellow-50 border-yellow-300':'bg-slate-50 border-slate-200'}`;
+                const diffBadge = q.difficulty==='hard'?'<span class="text-[9px] bg-red-100 text-red-700 px-1 rounded ml-1 flex-shrink-0">難</span>':'<span class="text-[9px] bg-blue-100 text-blue-700 px-1 rounded ml-1 flex-shrink-0">易</span>';
+                item.innerHTML = `
+                    <div class="flex items-center space-x-2 overflow-hidden w-full">
+                        <span class="font-bold text-slate-400 text-xs w-4 flex-shrink-0">${i+1}.</span>
+                        <img src="${q.image}" class="w-8 h-8 object-contain bg-white border rounded p-0.5 flex-shrink-0">
+                        <div class="flex flex-col min-w-0 flex-grow">
+                            <span class="font-bold text-slate-700 text-xs truncate flex items-center">${q.pokemonName} ${diffBadge}</span>
+                            <span class="text-[9px] text-slate-500 truncate">${q.category} / ${q.type}</span>
+                        </div>
+                    </div>
+                    <div class="flex space-x-1 flex-shrink-0 ml-2">
+                        <button onclick="editQuestion(${i})" class="p-1 text-blue-500 hover:bg-blue-100 rounded">✏️</button>
+                        <button onclick="moveQuestion(${i},-1)" class="p-1 text-slate-400 hover:bg-slate-200 rounded" ${i===0?'disabled':''}>⬆️</button>
+                        <button onclick="moveQuestion(${i},1)" class="p-1 text-slate-400 hover:bg-slate-200 rounded" ${i===questions.length-1?'disabled':''}>⬇️</button>
+                        <button onclick="deleteQuestion(${i})" class="p-1 text-red-400 hover:bg-red-100 rounded">❌</button>
+                    </div>`;
+                list.appendChild(item);
+            });
         }
-
+        
         function updateChart() {
-        const canvasEl = document.getElementById('typeChart');
-        if(!canvasEl) return;
-        const ctx = canvasEl.getContext('2d');
-        const msgEl = document.getElementById('empty-chart-msg');
-        if(questions.length===0) { if(msgEl) msgEl.classList.remove('hidden'); canvasEl.style.display='none'; return; }
-        if(msgEl) msgEl.classList.add('hidden'); canvasEl.style.display='block';
-        const tc = {}; questions.forEach(q => { const t=(q.type||"").split('/')[0].trim(); if(t) tc[t]=(tc[t]||0)+1; });
-        const lbl=Object.keys(tc), dat=Object.values(tc);
-        const cols = {'ノーマル':'#A8A77A','ほのお':'#EE8130','みず':'#6390F0','でんき':'#F7D02C','くさ':'#7AC74C','こおり':'#96D9D6','かくとう':'#C22E28','どく':'#A33EA1','じめん':'#E2BF65','ひこう':'#A98FF3','エスパー':'#F95587','むし':'#A6B91A','いわ':'#B6A136','ゴースト':'#735797','ドラゴン':'#6F35FC','あく':'#705746','はがね':'#B7B7CE','フェアリー':'#D685AD'};
-        const bg = lbl.map(l=>cols[l]||'#94a3b8');
-        if(typeChartInstance) { typeChartInstance.data.labels=lbl; typeChartInstance.data.datasets[0].data=dat; typeChartInstance.data.datasets[0].backgroundColor=bg; typeChartInstance.update(); }
-        else { typeChartInstance = new Chart(ctx, { type:'doughnut', data:{labels:lbl, datasets:[{data:dat, backgroundColor:bg, borderWidth:1}]}, options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'right',labels:{boxWidth:10,font:{size:9}}}}, cutout:'60%'} }); }
+            const canvasEl = document.getElementById('typeChart');
+            if(!canvasEl) return;
+            const ctx = canvasEl.getContext('2d');
+            const msgEl = document.getElementById('empty-chart-msg');
+            if(questions.length===0) { if(msgEl) msgEl.classList.remove('hidden'); canvasEl.style.display='none'; return; }
+            if(msgEl) msgEl.classList.add('hidden'); canvasEl.style.display='block';
+            const tc = {}; questions.forEach(q => { const t=(q.type||"").split('/')[0].trim(); if(t) tc[t]=(tc[t]||0)+1; });
+            const lbl=Object.keys(tc), dat=Object.values(tc);
+            const cols = {'ノーマル':'#A8A77A','ほのお':'#EE8130','みず':'#6390F0','でんき':'#F7D02C','くさ':'#7AC74C','こおり':'#96D9D6','かくとう':'#C22E28','どく':'#A33EA1','じめん':'#E2BF65','ひこう':'#A98FF3','エスパー':'#F95587','むし':'#A6B91A','いわ':'#B6A136','ゴースト':'#735797','ドラゴン':'#6F35FC','あく':'#705746','はがね':'#B7B7CE','フェアリー':'#D685AD'};
+            const bg = lbl.map(l=>cols[l]||'#94a3b8');
+            if(typeChartInstance) { typeChartInstance.data.labels=lbl; typeChartInstance.data.datasets[0].data=dat; typeChartInstance.data.datasets[0].backgroundColor=bg; typeChartInstance.update(); }
+            else { typeChartInstance = new Chart(ctx, { type:'doughnut', data:{labels:lbl, datasets:[{data:dat, backgroundColor:bg, borderWidth:1}]}, options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'right',labels:{boxWidth:10,font:{size:9}}}}, cutout:'60%'} }); }
         }
 
         // ==========================================
         // 5. HOST / OFFLINE QUIZ LOGIC
         // ==========================================
         function setupSpeedSlider() {
-        const sl = document.getElementById('speed-slider');
-        if(sl) {
-        sl.addEventListener('input', e => {
-        const v = parseInt(e.target.value); currentTextSpeed = 220 - v;
-        const sLbl = document.getElementById('speed-label');
-        if(sLbl) sLbl.textContent = currentTextSpeed<50?'超速':currentTextSpeed<100?'速い':currentTextSpeed<150?'普通':'遅い';
-        });
-        sl.dispatchEvent(new Event('input'));
-        }
+            const sl = document.getElementById('speed-slider');
+            if(sl) {
+                sl.addEventListener('input', e => {
+                    const v = parseInt(e.target.value); currentTextSpeed = 220 - v;
+                    const sLbl = document.getElementById('speed-label');
+                    if(sLbl) sLbl.textContent = currentTextSpeed<50?'超速':currentTextSpeed<100?'速い':currentTextSpeed<150?'普通':'遅い';
+                });
+                sl.dispatchEvent(new Event('input'));
+            }
         }
 
         function prepareHostQuizView() {
-        if(questions.length===0) {
-        const qc = document.getElementById('quiz-container'); if(qc) qc.classList.add('hidden');
-        const qs = document.getElementById('quiz-setup-msg'); if(qs) qs.classList.remove('hidden');
-        return;
-        }
-        const qc = document.getElementById('quiz-container'); if(qc) qc.classList.remove('hidden');
-        const qs = document.getElementById('quiz-setup-msg'); if(qs) qs.classList.add('hidden');
-        currentQIndex = 0;
-        setupHostQuestionUI();
+            if(questions.length===0) { 
+                const qc = document.getElementById('quiz-container'); if(qc) qc.classList.add('hidden'); 
+                const qs = document.getElementById('quiz-setup-msg'); if(qs) qs.classList.remove('hidden'); 
+                return; 
+            }
+            const qc = document.getElementById('quiz-container'); if(qc) qc.classList.remove('hidden'); 
+            const qs = document.getElementById('quiz-setup-msg'); if(qs) qs.classList.add('hidden');
+            currentQIndex = 0;
+            setupHostQuestionUI();
         }
 
         function setupHostQuestionUI() {
-        resetHostQuizState();
-        const q = questions[currentQIndex];
-        if(!q) return;
+            resetHostQuizState();
+            const q = questions[currentQIndex];
+            if(!q) return;
+            
+            const dcNum = document.getElementById('display-current-num'); if(dcNum) dcNum.textContent = currentQIndex + 1;
+            const dtNum = document.getElementById('display-total-num'); if(dtNum) dtNum.textContent = questions.length;
+            const bEl = document.getElementById('display-difficulty-badge');
+            if(bEl) {
+                bEl.textContent = q.difficulty==='hard'?'🔴 難しい':'🔵 易しい';
+                bEl.className = `ml-2 sm:ml-3 text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded border ${q.difficulty==='hard'?'bg-red-100 text-red-700 border-red-300':'bg-blue-100 text-blue-700 border-blue-300'}`;
+            }
+            
+            const dDesc = document.getElementById('display-desc');
+            if(dDesc) { dDesc.textContent = ''; dDesc.classList.remove('typewriter-text'); }
+            
+            const dCatC = document.getElementById('display-category-container'); if(dCatC) dCatC.classList.add('opacity-0');
+            const dTypC = document.getElementById('display-type-container'); if(dTypC) dTypC.classList.add('opacity-0');
+            
+            const iEl = document.getElementById('display-image');
+            if(iEl) { iEl.classList.add('hidden', 'opacity-0', 'scale-50'); iEl.classList.remove('scale-100', 'opacity-100'); iEl.src = ''; }
+            const iPlace = document.getElementById('image-placeholder'); if(iPlace) iPlace.classList.remove('hidden');
+            const dCorr = document.getElementById('display-correct-name'); if(dCorr) dCorr.classList.add('hidden');
+            const hResList = document.getElementById('host-result-list-panel'); if(hResList) hResList.classList.add('hidden');
 
-        const dcNum = document.getElementById('display-current-num'); if(dcNum) dcNum.textContent = currentQIndex + 1;
-        const dtNum = document.getElementById('display-total-num'); if(dtNum) dtNum.textContent = questions.length;
-        const bEl = document.getElementById('display-difficulty-badge');
-        if(bEl) {
-        bEl.textContent = q.difficulty==='hard'?'🔴 難しい':'🔵 易しい';
-        bEl.className = `ml-2 sm:ml-3 text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded border ${q.difficulty==='hard'?'bg-red-100 text-red-700 border-red-300':'bg-blue-100 text-blue-700 border-blue-300'}`;
-        }
+            const bStart = document.getElementById('btn-start'); if(bStart) { bStart.classList.remove('hidden'); bStart.classList.add('flex'); }
+            ['btn-next-hint','btn-reveal','btn-next'].forEach(id => { 
+                const el = document.getElementById(id); 
+                if(el) { el.classList.add('hidden'); el.classList.remove('flex'); }
+            });
+            const br = document.getElementById('btn-reveal'); if(br) br.disabled = true;
 
-        const dDesc = document.getElementById('display-desc');
-        if(dDesc) { dDesc.textContent = ''; dDesc.classList.remove('typewriter-text'); }
+            clearInterval(globalTimerInterval);
+            const tc = document.getElementById('host-timer-container'); if(tc) tc.classList.add('hidden');
 
-        const dCatC = document.getElementById('display-category-container'); if(dCatC) dCatC.classList.add('opacity-0');
-        const dTypC = document.getElementById('display-type-container'); if(dTypC) dTypC.classList.add('opacity-0');
-
-        const iEl = document.getElementById('display-image');
-        if(iEl) { iEl.classList.add('hidden', 'opacity-0', 'scale-50'); iEl.classList.remove('scale-100', 'opacity-100'); iEl.src = ''; }
-        const iPlace = document.getElementById('image-placeholder'); if(iPlace) iPlace.classList.remove('hidden');
-        const dCorr = document.getElementById('display-correct-name'); if(dCorr) dCorr.classList.add('hidden');
-        const hResList = document.getElementById('host-result-list-panel'); if(hResList) hResList.classList.add('hidden');
-
-        const bStart = document.getElementById('btn-start'); if(bStart) { bStart.classList.remove('hidden'); bStart.classList.add('flex'); }
-        ['btn-next-hint','btn-reveal','btn-next'].forEach(id => {
-        const el = document.getElementById(id);
-        if(el) { el.classList.add('hidden'); el.classList.remove('flex'); }
-        });
-        const br = document.getElementById('btn-reveal'); if(br) br.disabled = true;
-
-        clearInterval(globalTimerInterval);
-        const tc = document.getElementById('host-timer-container'); if(tc) tc.classList.add('hidden');
-
-        if (activeRoomId && isHost) {
-        setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'rooms', activeRoomId), {
-        status: 'waiting', currentQuestion: q, hintLevel: 0, answers: {}, timerDeadline: null
-        }, { merge: true }).catch(e=>console.error(e));
-        }
+            if (activeRoomId && isHost) {
+                setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'rooms', activeRoomId), {
+                    status: 'waiting', currentQuestion: q, hintLevel: 0, answers: {}, timerDeadline: null
+                }, { merge: true }).catch(e=>console.error(e));
+            }
         }
 
         function resetHostQuizState() {
-        clearInterval(typeInterval); quizState = 'idle'; charIndex = 0; currentHintLevel = 0;
+            clearInterval(typeInterval); quizState = 'idle'; charIndex = 0; currentHintLevel = 0;
         }
 
         window.startQuiz = function() {
-        const bS = document.getElementById('btn-start'); if(bS) { bS.classList.add('hidden'); bS.classList.remove('flex'); }
-        const bNH = document.getElementById('btn-next-hint'); if(bNH) { bNH.classList.remove('hidden'); bNH.classList.add('flex'); }
-        const bRev = document.getElementById('btn-reveal'); if(bRev) { bRev.classList.remove('hidden'); bRev.classList.add('flex'); bRev.disabled = false; }
-        quizState = 'playing';
-
-        const serverStartAt = Date.now();
-
-        if (activeRoomId && isHost) {
-        setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'rooms', activeRoomId), {
-        status: 'playing',
-        hintLevel: 0,
-        timerDeadline: serverStartAt + 40000,
-        timerDuration: 40,
-        typeStartAt: serverStartAt,
-        typeSpeedMs: currentTextSpeed
-        }, { merge: true }).catch(e=>console.error(e));
-        }
-
-        startTimerUI(serverStartAt + 40000, 40, 'host');
-
-        startTypewriter(questions[currentQIndex].desc || "", currentTextSpeed, 'display-desc', () => {
-        quizState = 'waiting_hint';
-        }, serverStartAt);
+            const bS = document.getElementById('btn-start'); if(bS) { bS.classList.add('hidden'); bS.classList.remove('flex'); }
+            const bNH = document.getElementById('btn-next-hint'); if(bNH) { bNH.classList.remove('hidden'); bNH.classList.add('flex'); }
+            const bRev = document.getElementById('btn-reveal'); if(bRev) { bRev.classList.remove('hidden'); bRev.classList.add('flex'); bRev.disabled = false; }
+            quizState = 'playing';
+            
+            const serverStartAt = Date.now();
+            
+            if (activeRoomId && isHost) {
+                setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'rooms', activeRoomId), { 
+                    status: 'playing', 
+                    hintLevel: 0, 
+                    timerDeadline: serverStartAt + 40000, 
+                    timerDuration: 40,
+                    typeStartAt: serverStartAt,
+                    typeSpeedMs: currentTextSpeed
+                }, { merge: true }).catch(e=>console.error(e));
+            }
+            
+            startTimerUI(serverStartAt + 40000, 40, 'host');
+            
+            startTypewriter(questions[currentQIndex].desc || "", currentTextSpeed, 'display-desc', () => {
+                quizState = 'waiting_hint';
+            }, serverStartAt);
         };
 
         window.showNextHint = function() {
-        const q = questions[currentQIndex];
-        let dur = 0;
-        if (currentHintLevel === 0) {
-        const dCat = document.getElementById('display-category'); if(dCat) dCat.textContent = q.category;
-        const dCatC = document.getElementById('display-category-container'); if(dCatC) dCatC.classList.remove('opacity-0');
-        currentHintLevel = 1;
-        dur = 30; // 分類
-        } else if (currentHintLevel === 1) {
-        const dType = document.getElementById('display-type'); if(dType) dType.textContent = q.type;
-        const dTypC = document.getElementById('display-type-container'); if(dTypC) dTypC.classList.remove('opacity-0');
-        currentHintLevel = 2;
-        dur = 20; // タイプ
-        const bNH = document.getElementById('btn-next-hint'); if(bNH) { bNH.classList.add('hidden'); bNH.classList.remove('flex'); }
-        quizState = 'waiting';
-        }
+            const q = questions[currentQIndex];
+            let dur = 0;
+            if (currentHintLevel === 0) {
+                const dCat = document.getElementById('display-category'); if(dCat) dCat.textContent = q.category; 
+                const dCatC = document.getElementById('display-category-container'); if(dCatC) dCatC.classList.remove('opacity-0');
+                currentHintLevel = 1;
+                dur = 30; // 分類
+            } else if (currentHintLevel === 1) {
+                const dType = document.getElementById('display-type'); if(dType) dType.textContent = q.type; 
+                const dTypC = document.getElementById('display-type-container'); if(dTypC) dTypC.classList.remove('opacity-0');
+                currentHintLevel = 2;
+                dur = 20; // タイプ
+                const bNH = document.getElementById('btn-next-hint'); if(bNH) { bNH.classList.add('hidden'); bNH.classList.remove('flex'); }
+                quizState = 'waiting';
+            }
+            
+            const newDeadline = Date.now() + dur * 1000;
+            startTimerUI(newDeadline, dur, 'host');
 
-        const newDeadline = Date.now() + dur * 1000;
-        startTimerUI(newDeadline, dur, 'host');
-
-        if (activeRoomId && isHost) {
-        setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'rooms', activeRoomId), {
-        hintLevel: currentHintLevel, timerDeadline: newDeadline, timerDuration: dur
-        }, { merge: true }).catch(e=>console.error(e));
-        }
+            if (activeRoomId && isHost) {
+                setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'rooms', activeRoomId), { 
+                    hintLevel: currentHintLevel, timerDeadline: newDeadline, timerDuration: dur
+                }, { merge: true }).catch(e=>console.error(e));
+            }
         };
 
         window.togglePause = function() {
-        // Feature disabled for timer compatibility
+            // Feature disabled for timer compatibility
         };
 
         window.revealAnswer = function() {
-        clearInterval(typeInterval); quizState = 'revealed'; const q = questions[currentQIndex];
-        if(!q) return;
+            clearInterval(typeInterval); quizState = 'revealed'; const q = questions[currentQIndex];
+            if(!q) return;
+            
+            const dD = document.getElementById('display-desc'); if(dD) { dD.textContent = q.desc; dD.classList.remove('typewriter-text'); }
+            const dC = document.getElementById('display-category'); if(dC) dC.textContent = q.category; 
+            const dCC = document.getElementById('display-category-container'); if(dCC) dCC.classList.remove('opacity-0');
+            const dT = document.getElementById('display-type'); if(dT) dT.textContent = q.type; 
+            const dTC = document.getElementById('display-type-container'); if(dTC) dTC.classList.remove('opacity-0');
+            
+            const iPl = document.getElementById('image-placeholder'); if(iPl) iPl.classList.add('hidden');
+            const iEl = document.getElementById('display-image'); if(iEl) { iEl.src = q.image; iEl.classList.remove('hidden'); }
+            const dCN = document.getElementById('display-correct-name'); if(dCN) { dCN.textContent = q.pokemonName; dCN.classList.remove('hidden'); }
+            
+            requestAnimationFrame(() => { if(iEl){ iEl.classList.replace('scale-50','scale-100'); iEl.classList.replace('opacity-0','opacity-100'); } });
 
-        const dD = document.getElementById('display-desc'); if(dD) { dD.textContent = q.desc; dD.classList.remove('typewriter-text'); }
-        const dC = document.getElementById('display-category'); if(dC) dC.textContent = q.category;
-        const dCC = document.getElementById('display-category-container'); if(dCC) dCC.classList.remove('opacity-0');
-        const dT = document.getElementById('display-type'); if(dT) dT.textContent = q.type;
-        const dTC = document.getElementById('display-type-container'); if(dTC) dTC.classList.remove('opacity-0');
+            ['btn-next-hint','btn-reveal'].forEach(id => { const el = document.getElementById(id); if(el) { el.classList.add('hidden'); el.classList.remove('flex'); } });
+            const bN = document.getElementById('btn-next'); if(bN) { bN.classList.remove('hidden'); bN.classList.add('flex'); }
+            const nT = document.getElementById('next-text'); if(nT) nT.textContent = (currentQIndex === questions.length - 1) ? '結果へ / エディタへ' : '次の問題へ';
 
-        const iPl = document.getElementById('image-placeholder'); if(iPl) iPl.classList.add('hidden');
-        const iEl = document.getElementById('display-image'); if(iEl) { iEl.src = q.image; iEl.classList.remove('hidden'); }
-        const dCN = document.getElementById('display-correct-name'); if(dCN) { dCN.textContent = q.pokemonName; dCN.classList.remove('hidden'); }
+            clearInterval(globalTimerInterval);
+            const tc = document.getElementById('host-timer-container'); if(tc) tc.classList.add('hidden');
 
-        requestAnimationFrame(() => { if(iEl){ iEl.classList.replace('scale-50','scale-100'); iEl.classList.replace('opacity-0','opacity-100'); } });
+            if (activeRoomId && isHost && latestRoomData) {
+                const players = latestRoomData.players || {};
+                const answers = latestRoomData.answers || {};
+                const newPlayers = { ...players };
 
-        ['btn-next-hint','btn-reveal'].forEach(id => { const el = document.getElementById(id); if(el) { el.classList.add('hidden'); el.classList.remove('flex'); } });
-        const bN = document.getElementById('btn-next'); if(bN) { bN.classList.remove('hidden'); bN.classList.add('flex'); }
-        const nT = document.getElementById('next-text'); if(nT) nT.textContent = (currentQIndex === questions.length - 1) ? '結果へ / エディタへ' : '次の問題へ';
-
-        clearInterval(globalTimerInterval);
-        const tc = document.getElementById('host-timer-container'); if(tc) tc.classList.add('hidden');
-
-        if (activeRoomId && isHost && latestRoomData) {
-        const players = latestRoomData.players || {};
-        const answers = latestRoomData.answers || {};
-        const newPlayers = { ...players };
-
-        setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'rooms', activeRoomId), {
-        status: 'revealed', hintLevel: 3, timerDeadline: null, players: newPlayers
-        }, { merge: true }).catch(e=>console.error(e));
-
-        renderHostResultList(q.pokemonName, newPlayers, answers);
-        const hRLP = document.getElementById('host-result-list-panel'); if(hRLP) hRLP.classList.remove('hidden');
-        } else if (!activeRoomId) {
-        renderHostResultList(q.pokemonName, {}, {});
-        }
+                setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'rooms', activeRoomId), { 
+                    status: 'revealed', hintLevel: 3, timerDeadline: null, players: newPlayers 
+                }, { merge: true }).catch(e=>console.error(e));
+                
+                renderHostResultList(q.pokemonName, newPlayers, answers);
+                const hRLP = document.getElementById('host-result-list-panel'); if(hRLP) hRLP.classList.remove('hidden');
+            } else if (!activeRoomId) {
+                renderHostResultList(q.pokemonName, {}, {});
+            }
         };
 
         window.nextQuestion = async function() {
-        if (currentQIndex < questions.length - 1) {
-        currentQIndex++; setupHostQuestionUI();
-        } else {
-        if (await showModal('全問終了しました！エディタに戻りますか？', true)) switchMode('editor');
-        }
+            if (currentQIndex < questions.length - 1) {
+                currentQIndex++; setupHostQuestionUI();
+            } else {
+                if (await showModal('全問終了しました！エディタに戻りますか？', true)) switchMode('editor');
+            }
         };
 
         function renderPlayersPanel() {
-        if (!latestRoomData || !isHost) return;
-        const players = latestRoomData.players || {};
-        const answers = latestRoomData.answers || {};
-        const currentHL = latestRoomData.hintLevel || 0;
-        const uids = Object.keys(players);
+            if (!latestRoomData || !isHost) return;
+            const players = latestRoomData.players || {};
+            const answers = latestRoomData.answers || {};
+            const currentHL = latestRoomData.hintLevel || 0;
+            const uids = Object.keys(players);
+            
+            const onlineCount = uids.filter(id => players[id].online).length;
+            const panelCountEl = document.getElementById('panel-player-count'); if(panelCountEl) panelCountEl.textContent = onlineCount;
+            const displayCountEl = document.getElementById('display-player-count'); if(displayCountEl) displayCountEl.textContent = onlineCount;
+            const answeredCountEl = document.getElementById('answered-count'); if(answeredCountEl) answeredCountEl.textContent = Object.keys(answers).length;
+            const totalCountEl = document.getElementById('total-player-count'); if(totalCountEl) totalCountEl.textContent = onlineCount;
+            
+            const isTeam = latestRoomData.teamMode || false;
+            const toggleEl = document.getElementById('toggle-team-mode'); if(toggleEl) toggleEl.checked = isTeam;
+            const btnRand = document.getElementById('btn-random-team');
+            const sb = document.getElementById('team-scoreboard');
+            
+            if (isTeam) {
+                if(btnRand) btnRand.classList.remove('hidden'); 
+                if(sb) { sb.classList.remove('hidden'); sb.classList.add('grid'); }
+                let ts = {red:0, blue:0, green:0, yellow:0};
+                uids.forEach(uid => { if(players[uid].team && players[uid].team !== 'none' && ts[players[uid].team] !== undefined) ts[players[uid].team] += (players[uid].score||0); });
+                const tsRed = document.getElementById('ts-red'); if(tsRed) tsRed.textContent = ts.red;
+                const tsBlue = document.getElementById('ts-blue'); if(tsBlue) tsBlue.textContent = ts.blue;
+                const tsGreen = document.getElementById('ts-green'); if(tsGreen) tsGreen.textContent = ts.green;
+                const tsYellow = document.getElementById('ts-yellow'); if(tsYellow) tsYellow.textContent = ts.yellow;
+            } else {
+                if(btnRand) btnRand.classList.add('hidden'); 
+                if(sb) { sb.classList.add('hidden'); sb.classList.remove('grid'); }
+            }
 
-        const onlineCount = uids.filter(id => players[id].online).length;
-        const panelCountEl = document.getElementById('panel-player-count'); if(panelCountEl) panelCountEl.textContent = onlineCount;
-        const displayCountEl = document.getElementById('display-player-count'); if(displayCountEl) displayCountEl.textContent = onlineCount;
-        const answeredCountEl = document.getElementById('answered-count'); if(answeredCountEl) answeredCountEl.textContent = Object.keys(answers).length;
-        const totalCountEl = document.getElementById('total-player-count'); if(totalCountEl) totalCountEl.textContent = onlineCount;
+            const listEl = document.getElementById('host-players-list');
+            if(listEl) {
+                listEl.innerHTML = '';
+                uids.forEach(uid => {
+                    const p = players[uid];
+                    const ansData = answers[uid];
+                    const attempts = ansData?.attempts || {};
+                    const attemptCount = attempts[currentHL] || 0;
+                    const isCorrect = ansData?.isCorrect || false;
 
-        const isTeam = latestRoomData.teamMode || false;
-        const toggleEl = document.getElementById('toggle-team-mode'); if(toggleEl) toggleEl.checked = isTeam;
-        const btnRand = document.getElementById('btn-random-team');
-        const sb = document.getElementById('team-scoreboard');
-
-        if (isTeam) {
-        if(btnRand) btnRand.classList.remove('hidden');
-        if(sb) { sb.classList.remove('hidden'); sb.classList.add('grid'); }
-        let ts = {red:0, blue:0, green:0, yellow:0};
-        uids.forEach(uid => { if(players[uid].team && players[uid].team !== 'none' && ts[players[uid].team] !== undefined) ts[players[uid].team] += (players[uid].score||0); });
-        const tsRed = document.getElementById('ts-red'); if(tsRed) tsRed.textContent = ts.red;
-        const tsBlue = document.getElementById('ts-blue'); if(tsBlue) tsBlue.textContent = ts.blue;
-        const tsGreen = document.getElementById('ts-green'); if(tsGreen) tsGreen.textContent = ts.green;
-        const tsYellow = document.getElementById('ts-yellow'); if(tsYellow) tsYellow.textContent = ts.yellow;
-        } else {
-        if(btnRand) btnRand.classList.add('hidden');
-        if(sb) { sb.classList.add('hidden'); sb.classList.remove('grid'); }
-        }
-
-        const listEl = document.getElementById('host-players-list');
-        if(listEl) {
-        listEl.innerHTML = '';
-        uids.forEach(uid => {
-        const p = players[uid];
-        const ansData = answers[uid];
-        const attempts = ansData?.attempts || {};
-        const attemptCount = attempts[currentHL] || 0;
-        const isCorrect = ansData?.isCorrect || false;
-
-        const li = document.createElement('li');
-        li.className = `p-2 rounded border ${p.online?'bg-slate-50 border-slate-200':'bg-slate-200 border-slate-300 opacity-60'} flex flex-col justify-between items-start text-sm shadow-sm gap-1`;
-
-        let teamBadge = '';
-        if (isTeam) {
-        const tc = { 'none': 'bg-slate-200 text-slate-500', 'red': 'bg-red-100 text-red-700', 'blue': 'bg-blue-100 text-blue-700', 'green': 'bg-green-100 text-green-700', 'yellow': 'bg-yellow-100 text-yellow-700' }[p.team || 'none'];
-        teamBadge = `<button onclick="cycleTeam('${uid}')" class="text-[10px] px-1.5 py-0.5 rounded font-bold ${tc} mr-2 flex-shrink-0 cursor-pointer border border-transparent hover:border-slate-400 focus:outline-none">TEAM</button>`;
-        }
-
-        li.innerHTML = `
-        <div class="flex items-center justify-between w-full">
-        <div class="flex items-center overflow-hidden">
-        ${teamBadge}
-        <span class="font-bold text-slate-700 truncate ${!p.online?'line-through':''}">${p.name}</span>
-        </div>
-        <span class="font-bold text-indigo-600 flex-shrink-0 ml-2">${p.score||0}pt</span>
-        </div>
-        <div class="w-full text-xs bg-white p-1 rounded border border-slate-100 flex justify-between mt-1">
-        <span class="truncate pr-1 font-bold ${isCorrect ? 'text-green-600' : (ansData?.text ? 'text-red-600' : 'text-slate-400')}">
-        ${isCorrect ? '⭕️' : (ansData?.text ? '❌' : '📝')} ${ansData?.text || '未回答'}
-        </span>
-        <span class="flex-shrink-0 text-slate-400">(${attemptCount}/3回)</span>
-        </div>
-        `;
-        listEl.appendChild(li);
-        });
-        }
+                    const li = document.createElement('li');
+                    li.className = `p-2 rounded border ${p.online?'bg-slate-50 border-slate-200':'bg-slate-200 border-slate-300 opacity-60'} flex flex-col justify-between items-start text-sm shadow-sm gap-1`;
+                    
+                    let teamBadge = '';
+                    if (isTeam) {
+                        const tc = { 'none': 'bg-slate-200 text-slate-500', 'red': 'bg-red-100 text-red-700', 'blue': 'bg-blue-100 text-blue-700', 'green': 'bg-green-100 text-green-700', 'yellow': 'bg-yellow-100 text-yellow-700' }[p.team || 'none'];
+                        teamBadge = `<button onclick="cycleTeam('${uid}')" class="text-[10px] px-1.5 py-0.5 rounded font-bold ${tc} mr-2 flex-shrink-0 cursor-pointer border border-transparent hover:border-slate-400 focus:outline-none">TEAM</button>`;
+                    }
+                    
+                    li.innerHTML = `
+                        <div class="flex items-center justify-between w-full">
+                            <div class="flex items-center overflow-hidden">
+                                ${teamBadge}
+                                <span class="font-bold text-slate-700 truncate ${!p.online?'line-through':''}">${p.name}</span>
+                            </div>
+                            <span class="font-bold text-indigo-600 flex-shrink-0 ml-2">${p.score||0}pt</span>
+                        </div>
+                        <div class="w-full text-xs bg-white p-1 rounded border border-slate-100 flex justify-between mt-1">
+                            <span class="truncate pr-1 font-bold ${isCorrect ? 'text-green-600' : (ansData?.text ? 'text-red-600' : 'text-slate-400')}">
+                                ${isCorrect ? '⭕️' : (ansData?.text ? '❌' : '📝')} ${ansData?.text || '未回答'}
+                            </span>
+                            <span class="flex-shrink-0 text-slate-400">(${attemptCount}/3回)</span>
+                        </div>
+                    `;
+                    listEl.appendChild(li);
+                });
+            }
         }
 
         // ==========================================
         // 6. MULTIPLAYER - HOST
         // ==========================================
         window.createRoom = async function() {
-        if (!currentUser) { await showModal("部屋を作るにはログインが必要です。"); return; }
-        if (questions.length === 0) { await showModal("問題がありません。"); return; }
+            if (!currentUser) { await showModal("部屋を作るにはログインが必要です。"); return; }
+            if (questions.length === 0) { await showModal("問題がありません。"); return; }
+            
+            const pBtn = document.querySelector('#host-controls-pre button');
+            if(pBtn) { pBtn.disabled = true; pBtn.textContent = '作成中...'; }
 
-        const pBtn = document.querySelector('#host-controls-pre button');
-        if(pBtn) { pBtn.disabled = true; pBtn.textContent = '作成中...'; }
+            try {
+                const rId = Math.floor(1000 + Math.random() * 9000).toString();
+                const rRef = doc(db, 'artifacts', appId, 'public', 'data', 'rooms', rId);
+                
+                await setDoc(rRef, {
+                    hostId: currentUser.uid,
+                    status: 'waiting',
+                    currentQuestion: questions[0],
+                    hintLevel: 0,
+                    players: {}, 
+                    answers: {}, 
+                    teamMode: false,
+                    timerDeadline: null,
+                    timerDuration: 0,
+                    createdAt: Date.now()
+                });
 
-        try {
-        const rId = Math.floor(1000 + Math.random() * 9000).toString();
-        const rRef = doc(db, 'artifacts', appId, 'public', 'data', 'rooms', rId);
+                activeRoomId = rId; isHost = true;
+                
+                const hcP = document.getElementById('host-controls-pre'); if(hcP) hcP.classList.add('hidden');
+                const hrI = document.getElementById('host-room-info'); if(hrI) hrI.classList.remove('hidden');
+                const hpP = document.getElementById('host-players-panel'); if(hpP) hpP.classList.remove('hidden');
+                const drId = document.getElementById('display-room-id'); if(drId) drId.textContent = rId;
+                const has = document.getElementById('host-answers-status'); if(has) has.classList.remove('hidden');
 
-        await setDoc(rRef, {
-        hostId: currentUser.uid,
-        status: 'waiting',
-        currentQuestion: questions[0],
-        hintLevel: 0,
-        players: {},
-        answers: {},
-        teamMode: false,
-        timerDeadline: null,
-        timerDuration: 0,
-        createdAt: Date.now()
-        });
+                unsubscribeRoom = onSnapshot(rRef, (snap) => {
+                    if (!snap.exists()) { closeRoom(true); return; }
+                    latestRoomData = snap.data();
+                    renderPlayersPanel();
+                    handleHostTimerSnapshot(latestRoomData);
+                }, (error) => {
+                    console.error("Room snapshot error", error);
+                    closeRoom(true);
+                });
 
-        activeRoomId = rId; isHost = true;
-
-        const hcP = document.getElementById('host-controls-pre'); if(hcP) hcP.classList.add('hidden');
-        const hrI = document.getElementById('host-room-info'); if(hrI) hrI.classList.remove('hidden');
-        const hpP = document.getElementById('host-players-panel'); if(hpP) hpP.classList.remove('hidden');
-        const drId = document.getElementById('display-room-id'); if(drId) drId.textContent = rId;
-        const has = document.getElementById('host-answers-status'); if(has) has.classList.remove('hidden');
-
-        unsubscribeRoom = onSnapshot(rRef, (snap) => {
-        if (!snap.exists()) { closeRoom(true); return; }
-        latestRoomData = snap.data();
-        renderPlayersPanel();
-        handleHostTimerSnapshot(latestRoomData);
-        }, (error) => {
-        console.error("Room snapshot error", error);
-        closeRoom(true);
-        });
-
-        await showModal(`部屋を作成しました！\n部屋番号は【${rId}】です。`);
-        prepareHostQuizView();
-
-        } catch(e) {
-        console.error("Create Room", e);
-        await showModal("部屋の作成に失敗しました。");
-        if(pBtn) { pBtn.disabled = false; pBtn.textContent = '部屋を作成する'; }
-        }
+                await showModal(`部屋を作成しました！\n部屋番号は【${rId}】です。`);
+                prepareHostQuizView();
+                
+            } catch(e) {
+                console.error("Create Room", e);
+                await showModal("部屋の作成に失敗しました。");
+                if(pBtn) { pBtn.disabled = false; pBtn.textContent = '部屋を作成する'; }
+            }
         };
 
         window.closeRoom = async function(forced = false) {
-        if (!activeRoomId || !isHost) return;
-        if (!forced && !await showModal("部屋を解散しますか？", true)) return;
-
-        try {
-        if(unsubscribeRoom) unsubscribeRoom();
-        await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'rooms', activeRoomId));
-        } catch(e) {}
-
-        activeRoomId = null; isHost = false; latestRoomData = null;
-        const hcP = document.getElementById('host-controls-pre');
-        if(hcP) { hcP.classList.remove('hidden'); const b = hcP.querySelector('button'); if(b) { b.disabled = false; b.textContent = '部屋を作成する'; } }
-        const hrI = document.getElementById('host-room-info'); if(hrI) hrI.classList.add('hidden');
-        const hpP = document.getElementById('host-players-panel'); if(hpP) hpP.classList.add('hidden');
-        const has = document.getElementById('host-answers-status'); if(has) has.classList.add('hidden');
-        clearInterval(globalTimerInterval);
-        const tc = document.getElementById('host-timer-container'); if(tc) tc.classList.add('hidden');
-        currentTimerDeadline = null;
-
-        if(forced) await showModal("部屋が閉じられました。");
+            if (!activeRoomId || !isHost) return;
+            if (!forced && !await showModal("部屋を解散しますか？", true)) return;
+            
+            try {
+                if(unsubscribeRoom) unsubscribeRoom();
+                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'rooms', activeRoomId));
+            } catch(e) {}
+            
+            activeRoomId = null; isHost = false; latestRoomData = null;
+            const hcP = document.getElementById('host-controls-pre');
+            if(hcP) { hcP.classList.remove('hidden'); const b = hcP.querySelector('button'); if(b) { b.disabled = false; b.textContent = '部屋を作成する'; } }
+            const hrI = document.getElementById('host-room-info'); if(hrI) hrI.classList.add('hidden');
+            const hpP = document.getElementById('host-players-panel'); if(hpP) hpP.classList.add('hidden');
+            const has = document.getElementById('host-answers-status'); if(has) has.classList.add('hidden');
+            clearInterval(globalTimerInterval);
+            const tc = document.getElementById('host-timer-container'); if(tc) tc.classList.add('hidden');
+            currentTimerDeadline = null;
+            
+            if(forced) await showModal("部屋が閉じられました。");
         };
 
         function handleHostTimerSnapshot(data) {
-        if (data.timerDeadline && data.timerDeadline !== currentTimerDeadline && (data.status === 'playing')) {
-        currentTimerDeadline = data.timerDeadline;
-        startTimerUI(data.timerDeadline, data.timerDuration, 'host');
-        } else if (!data.timerDeadline) {
-        currentTimerDeadline = null;
-        clearInterval(globalTimerInterval);
-        const tc = document.getElementById('host-timer-container'); if(tc) tc.classList.add('hidden');
-        }
+            if (data.timerDeadline && data.timerDeadline !== currentTimerDeadline && (data.status === 'playing')) {
+                currentTimerDeadline = data.timerDeadline;
+                startTimerUI(data.timerDeadline, data.timerDuration, 'host');
+            } else if (!data.timerDeadline) {
+                currentTimerDeadline = null;
+                clearInterval(globalTimerInterval);
+                const tc = document.getElementById('host-timer-container'); if(tc) tc.classList.add('hidden');
+            }
         }
 
         window.cycleTeam = async function(uid) {
-        if (!activeRoomId || !latestRoomData) return;
-        const current = latestRoomData.players[uid]?.team || 'none';
-        const tList = ['none', 'red', 'blue', 'green', 'yellow'];
-        let next = tList[(tList.indexOf(current) + 1) % tList.length];
-        if(next === 'none') next = 'red';
-        await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'rooms', activeRoomId), {
-        players: { [uid]: { team: next } }
-        }, { merge: true });
+            if (!activeRoomId || !latestRoomData) return;
+            const current = latestRoomData.players[uid]?.team || 'none';
+            const tList = ['none', 'red', 'blue', 'green', 'yellow'];
+            let next = tList[(tList.indexOf(current) + 1) % tList.length];
+            if(next === 'none') next = 'red';
+            await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'rooms', activeRoomId), {
+                players: { [uid]: { team: next } }
+            }, { merge: true });
         };
 
         window.randomizeTeams = async function() {
-        if (!activeRoomId || !latestRoomData) return;
-        const uids = Object.keys(latestRoomData.players||{}).filter(uid => latestRoomData.players[uid].online);
-        const teams = ['red', 'blue', 'green', 'yellow'];
-        const updates = { players: {} };
-        for(let i = uids.length - 1; i > 0; i--){
-        const j = Math.floor(Math.random() * (i + 1));
-        [uids[i], uids[j]] = [uids[j], uids[i]];
-        }
-        uids.forEach((uid, idx) => {
-        updates.players[uid] = { team: teams[idx % teams.length] };
-        });
-        await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'rooms', activeRoomId), updates, { merge: true });
+            if (!activeRoomId || !latestRoomData) return;
+            const uids = Object.keys(latestRoomData.players||{}).filter(uid => latestRoomData.players[uid].online);
+            const teams = ['red', 'blue', 'green', 'yellow'];
+            const updates = { players: {} };
+            for(let i = uids.length - 1; i > 0; i--){
+                const j = Math.floor(Math.random() * (i + 1));
+                [uids[i], uids[j]] = [uids[j], uids[i]];
+            }
+            uids.forEach((uid, idx) => {
+                updates.players[uid] = { team: teams[idx % teams.length] };
+            });
+            await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'rooms', activeRoomId), updates, { merge: true });
         };
 
         window.toggleTeamMode = async function(e) {
-        if (!activeRoomId) return;
-        await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'rooms', activeRoomId), { teamMode: e.target.checked }, { merge: true });
+            if (!activeRoomId) return;
+            await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'rooms', activeRoomId), { teamMode: e.target.checked }, { merge: true });
         };
 
         function renderHostResultList(correctNameStr, overridePlayers = null, overrideAnswers = null) {
-        const listEl = document.getElementById('host-result-list');
-        if(!listEl) return;
-        const hC = document.getElementById('host-result-correct-name'); if(hC) hC.textContent = correctNameStr;
-        listEl.innerHTML = '';
+            const listEl = document.getElementById('host-result-list');
+            if(!listEl) return;
+            const hC = document.getElementById('host-result-correct-name'); if(hC) hC.textContent = correctNameStr;
+            listEl.innerHTML = '';
+            
+            const players = overridePlayers || (latestRoomData ? latestRoomData.players : {}) || {};
+            const answers = overrideAnswers || (latestRoomData ? latestRoomData.answers : {}) || {};
 
-        const players = overridePlayers || (latestRoomData ? latestRoomData.players : {}) || {};
-        const answers = overrideAnswers || (latestRoomData ? latestRoomData.answers : {}) || {};
+            Object.keys(players).forEach(uid => {
+                const p = players[uid];
+                if (!p.online && !answers[uid]) return; 
 
-        Object.keys(players).forEach(uid => {
-        const p = players[uid];
-        if (!p.online && !answers[uid]) return;
-
-        const ansData = answers[uid];
-        let ptsStr = "";
-        let isCorrect = ansData?.isCorrect || false;
-
-        if (isCorrect) {
-        if (ansData.hintLevel === 0) ptsStr = "<span class='text-xs bg-red-100 text-red-700 px-1 rounded ml-2 font-bold'>+20pt</span>";
-        else if (ansData.hintLevel === 1) ptsStr = "<span class='text-xs bg-orange-100 text-orange-700 px-1 rounded ml-2 font-bold'>+15pt</span>";
-        else if (ansData.hintLevel === 2) ptsStr = "<span class='text-xs bg-yellow-100 text-yellow-700 px-1 rounded ml-2 font-bold'>+10pt</span>";
-        }
-
-        const li = document.createElement('li');
-        li.className = `p-3 rounded-lg border-2 ${isCorrect?'bg-red-50 border-red-300 text-red-800':'bg-slate-50 border-slate-300 text-slate-700'} flex flex-col sm:flex-row justify-between items-start sm:items-center shadow-sm gap-1 sm:gap-0`;
-        li.innerHTML = `
-        <div class="flex items-center overflow-hidden w-full sm:w-1/2">
-        <span class="font-bold text-sm truncate">${p.name}</span>
-        ${isCorrect ? ptsStr : ''}
-        </div>
-        <span class="font-bold text-base sm:text-lg w-full sm:w-1/2 text-left sm:text-right truncate ${isCorrect?'text-red-600':''}">${ansData?ansData.text:'無回答'}</span>
-        `;
-        listEl.appendChild(li);
-        });
+                const ansData = answers[uid];
+                let ptsStr = "";
+                let isCorrect = ansData?.isCorrect || false;
+                
+                if (isCorrect) {
+                    if (ansData.hintLevel === 0) ptsStr = "<span class='text-xs bg-red-100 text-red-700 px-1 rounded ml-2 font-bold'>+20pt</span>";
+                    else if (ansData.hintLevel === 1) ptsStr = "<span class='text-xs bg-orange-100 text-orange-700 px-1 rounded ml-2 font-bold'>+15pt</span>";
+                    else if (ansData.hintLevel === 2) ptsStr = "<span class='text-xs bg-yellow-100 text-yellow-700 px-1 rounded ml-2 font-bold'>+10pt</span>";
+                }
+                
+                const li = document.createElement('li');
+                li.className = `p-3 rounded-lg border-2 ${isCorrect?'bg-red-50 border-red-300 text-red-800':'bg-slate-50 border-slate-300 text-slate-700'} flex flex-col sm:flex-row justify-between items-start sm:items-center shadow-sm gap-1 sm:gap-0`;
+                li.innerHTML = `
+                    <div class="flex items-center overflow-hidden w-full sm:w-1/2">
+                        <span class="font-bold text-sm truncate">${p.name}</span>
+                        ${isCorrect ? ptsStr : ''}
+                    </div>
+                    <span class="font-bold text-base sm:text-lg w-full sm:w-1/2 text-left sm:text-right truncate ${isCorrect?'text-red-600':''}">${ansData?ansData.text:'無回答'}</span>
+                `;
+                listEl.appendChild(li);
+            });
         }
 
         // ==========================================
         // 7. MULTIPLAYER - GUEST
         // ==========================================
         function resetGuestView() {
-        const glp = document.getElementById('guest-login-panel'); if(glp) glp.classList.remove('hidden');
-        const gqp = document.getElementById('guest-quiz-panel'); if(gqp) gqp.classList.add('hidden');
-        const gri = document.getElementById('guest-room-id'); if(gri) gri.value = '';
-        const gpn = document.getElementById('guest-player-name'); if(gpn) gpn.value = '';
-        const glm = document.getElementById('guest-login-msg'); if(glm) glm.classList.add('hidden');
-        currentTimerDeadline = null;
-        clearInterval(globalTimerInterval);
+            const glp = document.getElementById('guest-login-panel'); if(glp) glp.classList.remove('hidden');
+            const gqp = document.getElementById('guest-quiz-panel'); if(gqp) gqp.classList.add('hidden');
+            const gri = document.getElementById('guest-room-id'); if(gri) gri.value = '';
+            const gpn = document.getElementById('guest-player-name'); if(gpn) gpn.value = '';
+            const glm = document.getElementById('guest-login-msg'); if(glm) glm.classList.add('hidden');
+            currentTimerDeadline = null;
+            clearInterval(globalTimerInterval);
         }
 
         window.joinRoom = async function() {
-        if (!currentUser) {
-        await showModal("通信の準備ができていないか、ログインに失敗しました。\nページを再読み込みしてください。");
-        return;
-        }
-        const rId = document.getElementById('guest-room-id').value.trim();
-        const pName = document.getElementById('guest-player-name').value.trim();
-        const msgEl = document.getElementById('guest-login-msg');
+            if (!currentUser) { 
+                await showModal("通信の準備ができていないか、ログインに失敗しました。\nページを再読み込みしてください。"); 
+                return; 
+            }
+            const rId = document.getElementById('guest-room-id').value.trim();
+            const pName = document.getElementById('guest-player-name').value.trim();
+            const msgEl = document.getElementById('guest-login-msg');
+            
+            if (!rId || !pName) { if(msgEl) {msgEl.textContent = "部屋番号と名前を入力してください。"; msgEl.classList.remove('hidden');} return; }
 
-        if (!rId || !pName) { if(msgEl) {msgEl.textContent = "部屋番号と名前を入力してください。"; msgEl.classList.remove('hidden');} return; }
+            try {
+                const rRef = doc(db, 'artifacts', appId, 'public', 'data', 'rooms', rId);
+                const snap = await getDoc(rRef);
+                if (!snap.exists()) { if(msgEl) {msgEl.textContent = "部屋が見つかりません。"; msgEl.classList.remove('hidden');} return; }
 
-        try {
-        const rRef = doc(db, 'artifacts', appId, 'public', 'data', 'rooms', rId);
-        const snap = await getDoc(rRef);
-        if (!snap.exists()) { if(msgEl) {msgEl.textContent = "部屋が見つかりません。"; msgEl.classList.remove('hidden');} return; }
+                const data = snap.data();
+                const existing = data.players && data.players[currentUser.uid];
 
-        const data = snap.data();
-        const existing = data.players && data.players[currentUser.uid];
+                await setDoc(rRef, {
+                    players: { 
+                        [currentUser.uid]: existing ? { ...existing, name: pName, online: true } : { name: pName, score: 0, team: 'none', online: true } 
+                    }
+                }, { merge: true });
 
-        await setDoc(rRef, {
-        players: {
-        [currentUser.uid]: existing ? { ...existing, name: pName, online: true } : { name: pName, score: 0, team: 'none', online: true }
-        }
-        }, { merge: true });
-
-        activeRoomId = rId; isHost = false; myGuestName = pName;
-        const glp = document.getElementById('guest-login-panel'); if(glp) glp.classList.add('hidden');
-        const gqp = document.getElementById('guest-quiz-panel'); if(gqp) gqp.classList.remove('hidden');
-        const gmn = document.getElementById('guest-my-name'); if(gmn) gmn.textContent = pName;
-
-        unsubscribeRoom = onSnapshot(rRef, handleGuestSnapshot, (error) => {
-        console.error("Guest snapshot error", error);
-        leaveRoom(true);
-        });
-
-        } catch(e) {
-        console.error("Join", e);
-        if(msgEl) { msgEl.textContent = "入室エラー: " + e.message; msgEl.classList.remove('hidden'); }
-        }
+                activeRoomId = rId; isHost = false; myGuestName = pName;
+                const glp = document.getElementById('guest-login-panel'); if(glp) glp.classList.add('hidden');
+                const gqp = document.getElementById('guest-quiz-panel'); if(gqp) gqp.classList.remove('hidden');
+                const gmn = document.getElementById('guest-my-name'); if(gmn) gmn.textContent = pName;
+                
+                unsubscribeRoom = onSnapshot(rRef, handleGuestSnapshot, (error) => {
+                    console.error("Guest snapshot error", error);
+                    leaveRoom(true);
+                });
+                
+            } catch(e) {
+                console.error("Join", e);
+                if(msgEl) { msgEl.textContent = "入室エラー: " + e.message; msgEl.classList.remove('hidden'); }
+            }
         };
 
         window.leaveRoom = async function(forced = false) {
-        if (!activeRoomId || isHost) return;
-        if (!forced && !await showModal("部屋から退出しますか？", true)) return;
+            if (!activeRoomId || isHost) return;
+            if (!forced && !await showModal("部屋から退出しますか？", true)) return;
 
-        try {
-        if(unsubscribeRoom) unsubscribeRoom();
-        if (currentUser) {
-        const rRef = doc(db, 'artifacts', appId, 'public', 'data', 'rooms', activeRoomId);
-        await setDoc(rRef, { players: { [currentUser.uid]: { online: false } } }, { merge: true });
-        }
-        } catch(e){}
+            try {
+                if(unsubscribeRoom) unsubscribeRoom();
+                if (currentUser) {
+                    const rRef = doc(db, 'artifacts', appId, 'public', 'data', 'rooms', activeRoomId);
+                    await setDoc(rRef, { players: { [currentUser.uid]: { online: false } } }, { merge: true });
+                }
+            } catch(e){}
 
-        activeRoomId = null; latestRoomData = null; guestCurrentQuestionId = null;
-        if(currentMode==='guest') resetGuestView();
-        if(forced) await showModal("ホストが部屋を解散しました。");
+            activeRoomId = null; latestRoomData = null; guestCurrentQuestionId = null;
+            if(currentMode==='guest') resetGuestView();
+            if(forced) await showModal("ホストが部屋を解散しました。");
         };
 
         function handleGuestSnapshot(snap) {
-        if (!snap.exists()) { leaveRoom(true); return; }
-        const data = snap.data();
-        latestRoomData = data;
+            if (!snap.exists()) { leaveRoom(true); return; }
+            const data = snap.data();
+            latestRoomData = data;
+            
+            const wScreen = document.getElementById('guest-waiting-screen');
+            const qArea = document.getElementById('guest-active-quiz');
+            const aArea = document.getElementById('guest-answer-area');
+            const rReveal = document.getElementById('guest-image-reveal');
+            const rList = document.getElementById('guest-result-list-panel');
 
-        const wScreen = document.getElementById('guest-waiting-screen');
-        const qArea = document.getElementById('guest-active-quiz');
-        const aArea = document.getElementById('guest-answer-area');
-        const rReveal = document.getElementById('guest-image-reveal');
-        const rList = document.getElementById('guest-result-list-panel');
+            // Team & Personal Score Update
+            renderGuestTeamScoreboard(data);
 
-        // Team & Personal Score Update
-        renderGuestTeamScoreboard(data);
+            // Timer Update
+            if (data.timerDeadline && data.timerDeadline !== currentTimerDeadline && (data.status === 'playing')) {
+                currentTimerDeadline = data.timerDeadline;
+                startTimerUI(data.timerDeadline, data.timerDuration, 'guest');
+            } else if (!data.timerDeadline) {
+                currentTimerDeadline = null;
+                clearInterval(globalTimerInterval);
+                const tc = document.getElementById('guest-timer-container'); if(tc) tc.classList.add('hidden');
+                updateGuestFormState(data);
+            }
 
-        // Timer Update
-        if (data.timerDeadline && data.timerDeadline !== currentTimerDeadline && (data.status === 'playing')) {
-        currentTimerDeadline = data.timerDeadline;
-        startTimerUI(data.timerDeadline, data.timerDuration, 'guest');
-        } else if (!data.timerDeadline) {
-        currentTimerDeadline = null;
-        clearInterval(globalTimerInterval);
-        const tc = document.getElementById('guest-timer-container'); if(tc) tc.classList.add('hidden');
-        updateGuestFormState(data);
-        }
+            if (data.status === 'waiting') {
+                if(wScreen) wScreen.classList.remove('hidden'); if(qArea) qArea.classList.add('hidden'); if(aArea) aArea.classList.add('hidden'); if(rReveal) rReveal.classList.add('hidden'); if(rList) rList.classList.add('hidden');
+                clearInterval(typeInterval);
+                guestCurrentQuestionId = null; // 待機画面に戻ったらリセット
+            } 
+            else if (data.status === 'playing') {
+                if(wScreen) wScreen.classList.add('hidden'); if(qArea) qArea.classList.remove('hidden'); if(rReveal) rReveal.classList.add('hidden'); if(rList) rList.classList.add('hidden');
+                
+                const q = data.currentQuestion;
+                if (!q) return;
 
-        if (data.status === 'waiting') {
-        if(wScreen) wScreen.classList.remove('hidden'); if(qArea) qArea.classList.add('hidden'); if(aArea) aArea.classList.add('hidden'); if(rReveal) rReveal.classList.add('hidden'); if(rList) rList.classList.add('hidden');
-        clearInterval(typeInterval);
-        guestCurrentQuestionId = null; // 待機画面に戻ったらリセット
-        }
-        else if (data.status === 'playing') {
-        if(wScreen) wScreen.classList.add('hidden'); if(qArea) qArea.classList.remove('hidden'); if(rReveal) rReveal.classList.add('hidden'); if(rList) rList.classList.add('hidden');
+                const qId = document.getElementById('guest-q-id'); if(qId) qId.textContent = q.id ? q.id.toString().slice(-4) : '?';
+                const bdg = document.getElementById('guest-diff-badge');
+                if(bdg) {
+                    bdg.textContent = q.difficulty==='hard'?'🔴難':'🔵易';
+                    bdg.className = `text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded border ${q.difficulty==='hard'?'bg-red-100 text-red-700 border-red-300':'bg-blue-100 text-blue-700 border-blue-300'}`;
+                }
 
-        const q = data.currentQuestion;
-        if (!q) return;
+                if (data.hintLevel === 0) {
+                    // 同じ問題でなければ文字送りを開始する
+                    if (guestCurrentQuestionId !== q.id) {
+                        guestCurrentQuestionId = q.id;
+                        startTypewriter(q.desc||"", 100, 'guest-display-desc', null, data.typeStartAt);
+                    }
+                } else if (data.hintLevel > 0) {
+                    guestCurrentQuestionId = q.id;
+                    clearInterval(typeInterval);
+                    const dEl = document.getElementById('guest-display-desc');
+                    if(dEl) { dEl.textContent = q.desc; dEl.classList.remove('typewriter-text'); }
+                }
 
-        const qId = document.getElementById('guest-q-id'); if(qId) qId.textContent = q.id ? q.id.toString().slice(-4) : '?';
-        const bdg = document.getElementById('guest-diff-badge');
-        if(bdg) {
-        bdg.textContent = q.difficulty==='hard'?'🔴難':'🔵易';
-        bdg.className = `text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded border ${q.difficulty==='hard'?'bg-red-100 text-red-700 border-red-300':'bg-blue-100 text-blue-700 border-blue-300'}`;
-        }
+                if (data.hintLevel >= 1) { 
+                    const catEl = document.getElementById('guest-display-cat'); if(catEl) catEl.textContent = q.category; 
+                    const catC = document.getElementById('guest-cat-container'); if(catC) catC.classList.remove('hidden'); 
+                } else {
+                    const catC = document.getElementById('guest-cat-container'); if(catC) catC.classList.add('hidden');
+                }
+                
+                if (data.hintLevel >= 2) { 
+                    const typEl = document.getElementById('guest-display-type'); if(typEl) typEl.textContent = q.type; 
+                    const typC = document.getElementById('guest-type-container'); if(typC) typC.classList.remove('hidden'); 
+                } else {
+                    const typC = document.getElementById('guest-type-container'); if(typC) typC.classList.add('hidden');
+                }
 
-        if (data.hintLevel === 0) {
-        // 同じ問題でなければ文字送りを開始する
-        if (guestCurrentQuestionId !== q.id) {
-        guestCurrentQuestionId = q.id;
-        startTypewriter(q.desc||"", 100, 'guest-display-desc', null, data.typeStartAt);
-        }
-        } else if (data.hintLevel > 0) {
-        guestCurrentQuestionId = q.id;
-        clearInterval(typeInterval);
-        const dEl = document.getElementById('guest-display-desc');
-        if(dEl) { dEl.textContent = q.desc; dEl.classList.remove('typewriter-text'); }
-        }
+                if(aArea) aArea.classList.remove('hidden');
+                updateGuestFormState(data);
+            }
+            else if (data.status === 'revealed') {
+                if(wScreen) wScreen.classList.add('hidden'); if(qArea) qArea.classList.remove('hidden'); if(aArea) aArea.classList.add('hidden');
+                
+                const q = data.currentQuestion;
+                if (!q) return;
 
-        if (data.hintLevel >= 1) {
-        const catEl = document.getElementById('guest-display-cat'); if(catEl) catEl.textContent = q.category;
-        const catC = document.getElementById('guest-cat-container'); if(catC) catC.classList.remove('hidden');
-        } else {
-        const catC = document.getElementById('guest-cat-container'); if(catC) catC.classList.add('hidden');
-        }
+                clearInterval(typeInterval);
+                const dD = document.getElementById('guest-display-desc'); if(dD) { dD.textContent = q.desc; dD.classList.remove('typewriter-text'); }
+                const dC = document.getElementById('guest-display-cat'); if(dC) dC.textContent = q.category;
+                const dCC = document.getElementById('guest-cat-container'); if(dCC) dCC.classList.remove('hidden');
+                const dT = document.getElementById('guest-display-type'); if(dT) dT.textContent = q.type;
+                const dTC = document.getElementById('guest-type-container'); if(dTC) dTC.classList.remove('hidden');
+                
+                const iEl = document.getElementById('guest-display-image'); if(iEl) iEl.src = q.image;
+                const cN = document.getElementById('guest-correct-name'); if(cN) cN.textContent = q.pokemonName;
+                if(rReveal) rReveal.classList.remove('hidden');
 
-        if (data.hintLevel >= 2) {
-        const typEl = document.getElementById('guest-display-type'); if(typEl) typEl.textContent = q.type;
-        const typC = document.getElementById('guest-type-container'); if(typC) typC.classList.remove('hidden');
-        } else {
-        const typC = document.getElementById('guest-type-container'); if(typC) typC.classList.add('hidden');
-        }
-
-        if(aArea) aArea.classList.remove('hidden');
-        updateGuestFormState(data);
-        }
-        else if (data.status === 'revealed') {
-        if(wScreen) wScreen.classList.add('hidden'); if(qArea) qArea.classList.remove('hidden'); if(aArea) aArea.classList.add('hidden');
-
-        const q = data.currentQuestion;
-        if (!q) return;
-
-        clearInterval(typeInterval);
-        const dD = document.getElementById('guest-display-desc'); if(dD) { dD.textContent = q.desc; dD.classList.remove('typewriter-text'); }
-        const dC = document.getElementById('guest-display-cat'); if(dC) dC.textContent = q.category;
-        const dCC = document.getElementById('guest-cat-container'); if(dCC) dCC.classList.remove('hidden');
-        const dT = document.getElementById('guest-display-type'); if(dT) dT.textContent = q.type;
-        const dTC = document.getElementById('guest-type-container'); if(dTC) dTC.classList.remove('hidden');
-
-        const iEl = document.getElementById('guest-display-image'); if(iEl) iEl.src = q.image;
-        const cN = document.getElementById('guest-correct-name'); if(cN) cN.textContent = q.pokemonName;
-        if(rReveal) rReveal.classList.remove('hidden');
-
-        renderGuestResultList(q.pokemonName, data);
-        if(rList) rList.classList.remove('hidden');
-        }
+                renderGuestResultList(q.pokemonName, data);
+                if(rList) rList.classList.remove('hidden');
+            }
         }
 
         function renderGuestTeamScoreboard(data) {
-        const sb = document.getElementById('guest-team-scoreboard');
-        if (data.teamMode) {
-        if(sb) { sb.classList.remove('hidden'); sb.classList.add('grid'); }
-        let ts = {red:0, blue:0, green:0, yellow:0};
-        Object.values(data.players||{}).forEach(p => { if(p.team && p.team !== 'none' && ts[p.team] !== undefined) ts[p.team] += (p.score||0); });
-        const r = document.getElementById('g-ts-red'); if(r) r.textContent = ts.red;
-        const b = document.getElementById('g-ts-blue'); if(b) b.textContent = ts.blue;
-        const g = document.getElementById('g-ts-green'); if(g) g.textContent = ts.green;
-        const y = document.getElementById('g-ts-yellow'); if(y) y.textContent = ts.yellow;
-        } else {
-        if(sb) { sb.classList.add('hidden'); sb.classList.remove('grid'); }
-        }
-
-        if (currentUser && data.players && data.players[currentUser.uid]) {
-        const ms = document.getElementById('guest-my-score'); if(ms) ms.textContent = (data.players[currentUser.uid].score || 0) + "pt";
-        }
+            const sb = document.getElementById('guest-team-scoreboard');
+            if (data.teamMode) {
+                if(sb) { sb.classList.remove('hidden'); sb.classList.add('grid'); }
+                let ts = {red:0, blue:0, green:0, yellow:0};
+                Object.values(data.players||{}).forEach(p => { if(p.team && p.team !== 'none' && ts[p.team] !== undefined) ts[p.team] += (p.score||0); });
+                const r = document.getElementById('g-ts-red'); if(r) r.textContent = ts.red;
+                const b = document.getElementById('g-ts-blue'); if(b) b.textContent = ts.blue;
+                const g = document.getElementById('g-ts-green'); if(g) g.textContent = ts.green;
+                const y = document.getElementById('g-ts-yellow'); if(y) y.textContent = ts.yellow;
+            } else {
+                if(sb) { sb.classList.add('hidden'); sb.classList.remove('grid'); }
+            }
+            
+            if (currentUser && data.players && data.players[currentUser.uid]) {
+                const ms = document.getElementById('guest-my-score'); if(ms) ms.textContent = (data.players[currentUser.uid].score || 0) + "pt";
+            }
         }
 
         function updateGuestFormState(data) {
-        const currentHL = data.hintLevel || 0;
-        const myAnsData = data.answers?.[currentUser?.uid] || {};
-        const attemptsMap = myAnsData.attempts || {0:0, 1:0, 2:0};
-        const remainCount = 3 - (attemptsMap[currentHL] || 0);
+            const currentHL = data.hintLevel || 0;
+            const currentHLStr = String(currentHL);
+            const myAnsData = data.answers?.[currentUser?.uid] || {};
+            const attemptsMap = myAnsData.attempts || {"0":0, "1":0, "2":0};
+            const remainCount = 3 - (attemptsMap[currentHLStr] || 0);
+            
+            const leftEl = document.getElementById('guest-attempts-left');
+            if (leftEl) leftEl.textContent = Math.max(0, remainCount);
+            
+            const inp = document.getElementById('guest-answer-input');
+            const btn = document.getElementById('guest-submit-btn');
+            const msg = document.getElementById('guest-answered-msg');
+            
+            if (myAnsData.text && (attemptsMap[currentHLStr] > 0)) {
+                if(msg) {
+                    msg.classList.remove('hidden');
+                    if (myAnsData.isCorrect) {
+                        msg.innerHTML = `✅ 正解！ (${myAnsData.text})<br><span class="text-xs font-normal">正解発表をお待ちください</span>`;
+                        msg.className = 'mt-2 text-center text-sm font-bold text-green-700 bg-green-50 py-2 px-3 rounded-lg border border-green-200 shadow-sm';
+                    } else {
+                        const countStr = remainCount > 0 ? `残り ${remainCount} 回回答できます` : `回答上限に達しました`;
+                        msg.innerHTML = `❌ 不正解... (${myAnsData.text})<br><span class="text-xs font-normal">${countStr}</span>`;
+                        msg.className = 'mt-2 text-center text-sm font-bold text-red-700 bg-red-50 py-2 px-3 rounded-lg border border-red-200 shadow-sm';
+                    }
+                }
+            } else {
+                if(msg) msg.classList.add('hidden');
+            }
 
-        const leftEl = document.getElementById('guest-attempts-left');
-        if (leftEl) leftEl.textContent = Math.max(0, remainCount);
+            const isPlaying = data.status === 'playing';
+            const isTimeUp = data.timerDeadline && Date.now() > data.timerDeadline;
 
-        const inp = document.getElementById('guest-answer-input');
-        const btn = document.getElementById('guest-submit-btn');
-        const msg = document.getElementById('guest-answered-msg');
+            // 時間切れの場合は専用のメッセージを表示する
+            if (isTimeUp && !myAnsData.isCorrect && remainCount > 0) {
+                 if(msg) {
+                     msg.classList.remove('hidden');
+                     msg.innerHTML = `⏳ 時間切れです。<br><span class="text-xs font-normal">次のヒントをお待ちください</span>`;
+                     msg.className = 'mt-2 text-center text-sm font-bold text-slate-700 bg-slate-100 py-2 px-3 rounded-lg border border-slate-300 shadow-sm';
+                 }
+            }
 
-        if (myAnsData.text && (attemptsMap[currentHL] > 0)) {
-        if(msg) {
-        msg.classList.remove('hidden');
-        if (myAnsData.isCorrect) {
-        msg.innerHTML = `✅ 正解！ (${myAnsData.text})<br><span class="text-xs font-normal">正解発表をお待ちください</span>`;
-        msg.className = 'mt-2 text-center text-sm font-bold text-green-700 bg-green-50 py-2 px-3 rounded-lg border border-green-200 shadow-sm';
-        } else {
-        const countStr = remainCount > 0 ? `残り ${remainCount} 回回答できます` : `回答上限に達しました`;
-        msg.innerHTML = `❌ 不正解... (${myAnsData.text})<br><span class="text-xs font-normal">${countStr}</span>`;
-        msg.className = 'mt-2 text-center text-sm font-bold text-red-700 bg-red-50 py-2 px-3 rounded-lg border border-red-200 shadow-sm';
-        }
-        }
-        } else {
-        if(msg) msg.classList.add('hidden');
-        }
-
-        let isTimeUp = false;
-        if (data.timerDeadline && Date.now() > data.timerDeadline) isTimeUp = true;
-        else if (!data.timerDeadline) isTimeUp = true;
-
-        if (remainCount <= 0 || isTimeUp || myAnsData.isCorrect) {
-        if(inp) inp.disabled = true;
-        if(btn) { btn.disabled = true; btn.classList.add('opacity-50'); }
-        } else {
-        if(inp) inp.disabled = false;
-        if(btn) { btn.disabled = false; btn.classList.remove('opacity-50'); }
-        }
+            if (remainCount <= 0 || !isPlaying || myAnsData.isCorrect || isTimeUp) {
+                if(inp) inp.disabled = true;
+                if(btn) { btn.disabled = true; btn.classList.add('opacity-50'); }
+            } else {
+                if(inp) inp.disabled = false;
+                if(btn) { btn.disabled = false; btn.classList.remove('opacity-50'); }
+            }
         }
 
         window.submitAnswer = async function(e) {
-        e.preventDefault();
-        if (!activeRoomId || !currentUser || !latestRoomData) return;
+            e.preventDefault();
+            if (!activeRoomId || !currentUser || !latestRoomData) return;
+            
+            if (latestRoomData.status !== 'playing') {
+                await showModal("現在は回答を受け付けていません。"); return;
+            }
 
-        if (latestRoomData.timerDeadline && Date.now() > latestRoomData.timerDeadline) {
-        await showModal("時間切れです。"); return;
-        }
+            // タイマーが0秒を過ぎていたら送信を完全にブロック
+            if (latestRoomData.timerDeadline && Date.now() > latestRoomData.timerDeadline) {
+                await showModal("時間切れです。次のヒントをお待ちください。"); 
+                updateGuestFormState(latestRoomData);
+                return;
+            }
 
-        const ansInp = document.getElementById('guest-answer-input');
-        const ans = ansInp ? ansInp.value.trim() : '';
-        if (!ans) return;
+            const ansInp = document.getElementById('guest-answer-input');
+            const ans = ansInp ? ansInp.value.trim() : '';
+            if (!ans) return;
 
-        const currentHL = latestRoomData.hintLevel || 0;
-        const myAnsData = latestRoomData.answers?.[currentUser.uid] || {};
-        const attempts = myAnsData.attempts || {0:0, 1:0, 2:0};
+            const currentHL = latestRoomData.hintLevel || 0;
+            const currentHLStr = String(currentHL);
+            const myAnsData = latestRoomData.answers?.[currentUser.uid] || {};
+            const attempts = myAnsData.attempts || {"0":0, "1":0, "2":0};
+            
+            if (attempts[currentHLStr] >= 3) {
+                await showModal("このヒントでの回答回数の上限（3回）に達しました。"); return;
+            }
+            if (myAnsData.isCorrect) {
+                await showModal("すでに正解しています！"); return;
+            }
+            
+            attempts[currentHLStr]++;
 
-        if (attempts[currentHL] >= 3) {
-        await showModal("このヒントでの回答回数の上限（3回）に達しました。"); return;
-        }
-        if (myAnsData.isCorrect) {
-        await showModal("すでに正解しています！"); return;
-        }
+            const q = latestRoomData.currentQuestion;
+            const normCorrect = normalizeAnswer(q.pokemonName);
+            const normAns = normalizeAnswer(ans);
+            let isCorrect = false;
+            let earnedScore = 0;
 
-        attempts[currentHL]++;
+            if (normAns === normCorrect || (normCorrect.includes(normAns) && normAns.length >= 2)) {
+                isCorrect = true;
+                if (currentHL === 0) earnedScore = 20;
+                else if (currentHL === 1) earnedScore = 15;
+                else if (currentHL === 2) earnedScore = 10;
+            }
 
-        const q = latestRoomData.currentQuestion;
-        const normCorrect = normalizeAnswer(q.pokemonName);
-        const normAns = normalizeAnswer(ans);
-        let isCorrect = false;
-        let earnedScore = 0;
+            const btn = document.getElementById('guest-submit-btn');
+            if(btn) btn.disabled = true;
+            try {
+                const updates = {
+                    [`answers.${currentUser.uid}`]: { text: ans, hintLevel: currentHL, attempts: attempts, isCorrect: isCorrect }
+                };
+                
+                if (isCorrect) {
+                    const currentScore = latestRoomData.players[currentUser.uid]?.score || 0;
+                    updates[`players.${currentUser.uid}.score`] = currentScore + earnedScore;
+                }
 
-        if (normAns === normCorrect || (normCorrect.includes(normAns) && normAns.length >= 2)) {
-        isCorrect = true;
-        if (currentHL === 0) earnedScore = 20;
-        else if (currentHL === 1) earnedScore = 15;
-        else if (currentHL === 2) earnedScore = 10;
-        }
-
-        const btn = document.getElementById('guest-submit-btn');
-        if(btn) btn.disabled = true;
-        try {
-        // 回答を記録
-        const updates = {
-        [`answers.${currentUser.uid}`]: { text: ans, hintLevel: currentHL, attempts: attempts, isCorrect: isCorrect }
-        };
-
-        // 正解時はスコアも即座に加算（ホストにもすぐ反映されるように）
-        if (isCorrect) {
-        const currentScore = latestRoomData.players[currentUser.uid]?.score || 0;
-        updates[`players.${currentUser.uid}.score`] = currentScore + earnedScore;
-        }
-
-        await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'rooms', activeRoomId), updates, { merge: true });
-        if(ansInp) ansInp.value = '';
-        } catch(err) { console.error("Submit", err); await showModal("送信エラー: " + err.message); }
-        finally { if(btn) btn.disabled = false; }
+                await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'rooms', activeRoomId), updates);
+                if(ansInp) ansInp.value = '';
+            } catch(err) { 
+                console.error("Submit", err); 
+                await showModal("送信エラー: " + err.message); 
+            }
+            finally { 
+                if(btn) btn.disabled = false; 
+            }
         };
 
         function renderGuestResultList(correctNameStr, data) {
-        const listEl = document.getElementById('guest-result-list');
-        if(!listEl) return;
-        listEl.innerHTML = '';
+            const listEl = document.getElementById('guest-result-list');
+            if(!listEl) return;
+            listEl.innerHTML = '';
+            
+            const players = data.players || {};
+            const answers = data.answers || {};
 
-        const players = data.players || {};
-        const answers = data.answers || {};
+            Object.keys(players).forEach(uid => {
+                const p = players[uid];
+                if (!p.online && !answers[uid]) return;
 
-        Object.keys(players).forEach(uid => {
-        const p = players[uid];
-        if (!p.online && !answers[uid]) return;
-
-        const ansData = answers[uid];
-        let isCorrect = ansData?.isCorrect || false;
-        let ptsStr = "";
-
-        if (isCorrect) {
-        if (ansData.hintLevel === 0) ptsStr = "<span class='text-[10px] bg-red-100 text-red-700 px-1 rounded ml-1 font-bold'>+20</span>";
-        else if (ansData.hintLevel === 1) ptsStr = "<span class='text-[10px] bg-orange-100 text-orange-700 px-1 rounded ml-1 font-bold'>+15</span>";
-        else if (ansData.hintLevel === 2) ptsStr = "<span class='text-[10px] bg-yellow-100 text-yellow-700 px-1 rounded ml-1 font-bold'>+10</span>";
-        }
-
-        const li = document.createElement('li');
-        li.className = `p-2 rounded border border-slate-200 ${isCorrect?'bg-red-50 text-red-800':'bg-slate-50 text-slate-700'} flex flex-col sm:flex-row justify-between items-start sm:items-center shadow-sm gap-1 sm:gap-0`;
-        li.innerHTML = `
-        <div class="flex items-center overflow-hidden w-full sm:w-1/2 pr-1">
-        <span class="font-bold text-xs truncate">${p.name}</span>
-        ${isCorrect ? ptsStr : ''}
-        </div>
-        <span class="font-bold text-sm w-full sm:w-1/2 text-left sm:text-right truncate ${isCorrect?'text-red-600':''}">${ansData?ansData.text:'-'}</span>
-        `;
-        listEl.appendChild(li);
-        });
+                const ansData = answers[uid];
+                let isCorrect = ansData?.isCorrect || false;
+                let ptsStr = "";
+                
+                if (isCorrect) {
+                    if (ansData.hintLevel === 0) ptsStr = "<span class='text-[10px] bg-red-100 text-red-700 px-1 rounded ml-1 font-bold'>+20</span>";
+                    else if (ansData.hintLevel === 1) ptsStr = "<span class='text-[10px] bg-orange-100 text-orange-700 px-1 rounded ml-1 font-bold'>+15</span>";
+                    else if (ansData.hintLevel === 2) ptsStr = "<span class='text-[10px] bg-yellow-100 text-yellow-700 px-1 rounded ml-1 font-bold'>+10</span>";
+                }
+                
+                const li = document.createElement('li');
+                li.className = `p-2 rounded border border-slate-200 ${isCorrect?'bg-red-50 text-red-800':'bg-slate-50 text-slate-700'} flex flex-col sm:flex-row justify-between items-start sm:items-center shadow-sm gap-1 sm:gap-0`;
+                li.innerHTML = `
+                    <div class="flex items-center overflow-hidden w-full sm:w-1/2 pr-1">
+                        <span class="font-bold text-xs truncate">${p.name}</span>
+                        ${isCorrect ? ptsStr : ''}
+                    </div>
+                    <span class="font-bold text-sm w-full sm:w-1/2 text-left sm:text-right truncate ${isCorrect?'text-red-600':''}">${ansData?ansData.text:'-'}</span>
+                `;
+                listEl.appendChild(li);
+            });
         }
 
         document.addEventListener('DOMContentLoaded', init);
