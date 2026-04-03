@@ -1,0 +1,1787 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ポケモン図鑑クイズメーカー</title>
+    <meta name="description" content="ポケモン図鑑の説明文からポケモンを当てるクイズメーカー＆マルチプレイ対応の出題システムです。">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+            height: 200px;
+            max-height: 200px;
+        }
+
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 8px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 8px;
+        }
+
+            .custom-scroll::-webkit-scrollbar-thumb:hover {
+                background: #94a3b8;
+            }
+
+        .typewriter-text {
+            border-right: 2px solid #ef4444;
+            animation: blink-cursor 0.75s step-end infinite;
+        }
+
+        @keyframes blink-cursor {
+            from, to {
+                border-color: transparent
+            }
+
+            50% {
+                border-color: #ef4444;
+            }
+        }
+
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #ef4444;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-red-600 text-white shadow-md sticky top-0 z-20">
+        <div class="container mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-2">
+            <h1 class="text-xl md:text-2xl font-bold tracking-wider flex items-center w-full md:w-auto justify-center md:justify-start mb-2 md:mb-0"><span class="mr-2">📖</span> ポケモン図鑑クイズ</h1>
+            <nav class="flex flex-wrap gap-2 w-full md:w-auto justify-center">
+                <button id="tab-editor" class="px-3 py-1.5 md:px-4 md:py-2 bg-white text-red-600 font-semibold rounded shadow transition hover:bg-red-50 text-sm md:text-base flex-1 md:flex-none" onclick="switchMode('editor')">✏️ 作る</button>
+                <button id="tab-quiz" class="px-3 py-1.5 md:px-4 md:py-2 bg-red-700 text-white font-semibold rounded transition hover:bg-red-800 text-sm md:text-base flex-1 md:flex-none" onclick="switchMode('quiz')">🎮 出題(ホスト)</button>
+                <button id="tab-guest" class="px-3 py-1.5 md:px-4 md:py-2 bg-red-700 text-white font-semibold rounded transition hover:bg-red-800 text-sm md:text-base flex-1 md:flex-none" onclick="switchMode('guest')">🚪 参加(ゲスト)</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 max-w-6xl flex-grow flex flex-col relative">
+
+        <!-- Custom Modal -->
+        <div id="custom-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900 bg-opacity-50 backdrop-blur-sm transition-opacity p-4">
+            <div class="bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full mx-auto transform scale-95 transition-transform duration-300">
+                <h3 id="modal-title" class="text-xl font-bold text-slate-800 mb-3 flex items-center"><span class="mr-2">🔔</span> お知らせ</h3>
+                <p id="modal-message" class="text-slate-600 mb-6 text-sm leading-relaxed"></p>
+                <div class="flex justify-end space-x-3">
+                    <button id="modal-btn-cancel" class="hidden px-5 py-2.5 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition font-bold text-sm">キャンセル</button>
+                    <button id="modal-btn-confirm" class="px-5 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-bold text-sm shadow-md">OK</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== 1. EDITOR MODE ==================== -->
+        <section id="view-editor" class="flex-grow flex flex-col">
+            <div class="mb-4">
+                <h2 class="text-2xl font-bold mb-2 text-slate-700 border-b-2 border-red-500 pb-2 inline-block">問題エディタ</h2>
+                <p class="text-slate-600 text-xs sm:text-sm mt-2">
+                    ポケモンの名前から自動取得するか、自分で内容を入力して問題を作成できます。
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-grow">
+                <!-- Left Column: Input Form -->
+                <div class="lg:col-span-5 flex flex-col space-y-4">
+
+                    <!-- ライブラリモード (自動取得) -->
+                    <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-200 shadow-sm">
+                        <h3 class="text-sm font-bold mb-2 text-indigo-800 flex items-center"><span class="mr-1">🔍</span> ライブラリから自動入力</h3>
+                        <p class="text-[11px] text-indigo-600 mb-3 leading-tight">
+                            ※名前を入力するとデータベースから取得します。<br>
+                            ※リージョンフォームは「ロコン アローラ」と入力。
+                        </p>
+                        <div class="flex space-x-2">
+                            <input type="text" id="auto-search-name" class="flex-grow p-2 text-sm border border-indigo-300 rounded focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="例: ロコン アローラ">
+                            <button onclick="fetchPokemonData()" id="btn-auto-fetch" class="bg-indigo-600 text-white px-4 py-2 rounded text-sm font-bold hover:bg-indigo-700 transition flex items-center whitespace-nowrap">
+                                <span id="fetch-text">取得</span>
+                                <div id="fetch-loader" class="loader hidden ml-2"></div>
+                            </button>
+                        </div>
+                        <p id="fetch-msg" class="text-xs text-red-500 mt-2 hidden"></p>
+                    </div>
+
+                    <!-- 手動入力・編集フォーム -->
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 h-fit">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 id="form-title" class="text-lg font-bold text-slate-700">➕ 新しい問題</h3>
+                            <span id="edit-badge" class="hidden bg-yellow-100 text-yellow-800 text-xs font-bold px-2 py-1 rounded border border-yellow-300">編集中</span>
+                        </div>
+                        <form id="quiz-form" class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">ポケモンの名前（正解） <span class="text-red-500">*</span></label>
+                                <input type="text" id="input-pokemon-name" required class="w-full p-2 border border-slate-300 rounded focus:ring-2 focus:ring-slate-500 outline-none transition text-sm font-bold text-red-700 bg-red-50" placeholder="例: ピカチュウ">
+                                <p class="text-[10px] text-slate-500 mt-1">※マルチプレイ時の正誤判定に使われます。</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">難易度の設定 <span class="text-red-500">*</span></label>
+                                <div class="flex flex-col sm:flex-row gap-2 bg-slate-50 p-2 rounded border border-slate-200">
+                                    <label class="inline-flex items-center cursor-pointer">
+                                        <input type="radio" name="difficulty" value="easy" checked class="form-radio text-blue-600 w-4 h-4">
+                                        <span class="ml-2 text-sm text-blue-700 font-bold">🔵 易しい（見た目中心）</span>
+                                    </label>
+                                    <label class="inline-flex items-center cursor-pointer">
+                                        <input type="radio" name="difficulty" value="hard" class="form-radio text-red-600 w-4 h-4">
+                                        <span class="ml-2 text-sm text-red-700 font-bold">🔴 難しい（生態中心）</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">図鑑の説明 <span class="text-red-500">*</span></label>
+                                <textarea id="input-desc" required rows="3" class="w-full p-2 border border-slate-300 rounded focus:ring-2 focus:ring-slate-500 outline-none transition text-sm" placeholder="図鑑の説明文を入力..."></textarea>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">分類 <span class="text-red-500">*</span></label>
+                                    <input type="text" id="input-category" required class="w-full p-2 border border-slate-300 rounded focus:ring-2 focus:ring-slate-500 outline-none transition" placeholder="例: ねずみポケモン">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">タイプ <span class="text-red-500">*</span></label>
+                                    <input type="text" id="input-type" required class="w-full p-2 border border-slate-300 rounded focus:ring-2 focus:ring-slate-500 outline-none transition" placeholder="例: でんき">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">画像 <span class="text-red-500">*</span></label>
+                                <input type="file" id="input-image" accept="image/*" class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100 transition mb-2">
+                                <div class="flex justify-center bg-slate-100 rounded border border-dashed border-slate-300 min-h-[100px] items-center relative">
+                                    <img id="preview-image" src="" alt="プレビュー" class="hidden max-h-[100px] object-contain p-2">
+                                    <span id="preview-placeholder" class="text-slate-400 text-xs">画像未選択</span>
+                                </div>
+                            </div>
+
+                            <div class="flex space-x-2 pt-2">
+                                <button type="submit" id="btn-submit" class="flex-grow bg-slate-800 text-white font-bold py-2 px-4 rounded hover:bg-slate-900 transition shadow text-sm">リストに追加</button>
+                                <button type="button" id="btn-cancel" onclick="cancelEdit()" class="hidden bg-slate-200 text-slate-700 font-bold py-2 px-4 rounded hover:bg-slate-300 transition text-sm">キャンセル</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Right Column: Question List & Sync -->
+                <div class="lg:col-span-7 flex flex-col space-y-4">
+                    <!-- Cloud Sync -->
+                    <div class="bg-indigo-50 p-3 rounded-xl border border-indigo-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+                        <div>
+                            <h3 class="text-sm font-bold text-indigo-800 flex items-center"><span class="mr-1">☁️</span> データ保存 (ホスト用)</h3>
+                            <p class="text-[10px] text-indigo-600 mt-1"><span id="auth-status" class="font-bold text-slate-500">ログイン確認中...</span></p>
+                        </div>
+                        <div class="flex gap-2 w-full sm:w-auto">
+                            <button id="btn-save-cloud" onclick="saveToCloud()" disabled class="flex-grow sm:flex-none bg-indigo-600 text-white px-3 py-1.5 rounded text-xs font-bold hover:bg-indigo-700 transition disabled:opacity-50 shadow-sm">今すぐ保存</button>
+                            <button id="btn-load-cloud" onclick="loadFromCloud()" disabled class="flex-grow sm:flex-none bg-white text-indigo-600 border border-indigo-600 px-3 py-1.5 rounded text-xs font-bold hover:bg-indigo-50 transition disabled:opacity-50 shadow-sm">クラウド読込</button>
+                        </div>
+                    </div>
+
+                    <!-- Chart Section -->
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                        <h3 class="text-md font-bold mb-2 text-slate-700">📊 問題のタイプ分布</h3>
+                        <div class="chart-container">
+                            <canvas id="typeChart"></canvas>
+                        </div>
+                        <p id="empty-chart-msg" class="text-center text-slate-400 text-xs mt-2">問題を追加するとグラフが表示されます</p>
+                    </div>
+
+                    <!-- List Section -->
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex-grow flex flex-col min-h-[300px]">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="text-md font-bold text-slate-700">📋 登録済みの問題 (<span id="question-count">0</span>)</h3>
+                            <button onclick="clearAllQuestions()" class="text-xs text-red-500 hover:text-red-700 font-bold border border-red-200 px-2 py-1 rounded bg-red-50">すべて削除</button>
+                        </div>
+                        <div id="question-list" class="flex-grow overflow-y-auto custom-scroll max-h-[450px] space-y-2 pr-1">
+                            <!-- Questions -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 2. HOST / OFFLINE QUIZ MODE ==================== -->
+        <section id="view-quiz" class="hidden flex-grow flex flex-col items-center max-w-4xl mx-auto w-full">
+
+            <div id="quiz-setup-msg" class="text-center mt-20 hidden w-full px-4">
+                <p class="text-lg sm:text-xl text-slate-500 mb-4">問題が登録されていません。</p>
+                <button onclick="switchMode('editor')" class="bg-red-600 text-white px-6 py-2 rounded shadow hover:bg-red-700 transition">エディタに戻る</button>
+            </div>
+
+            <div id="quiz-container" class="w-full flex flex-col space-y-3">
+
+                <!-- マルチプレイ (Host) コントロールパネル -->
+                <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-200 flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <div class="text-center sm:text-left">
+                        <h3 class="font-bold text-indigo-800 flex items-center justify-center sm:justify-start">🌐 オンラインで出題（ホスト）</h3>
+                        <p class="text-[11px] text-indigo-600 mt-1">部屋を作ると、他の人が「参加」タブから参加できます。</p>
+                    </div>
+                    <div id="host-controls-pre" class="w-full sm:w-auto">
+                        <button onclick="createRoom()" class="w-full sm:w-auto bg-indigo-600 text-white px-6 py-2.5 rounded shadow-md font-bold text-sm hover:bg-indigo-700 transition whitespace-nowrap">部屋を作成する</button>
+                    </div>
+                    <div id="host-room-info" class="hidden w-full sm:w-auto flex flex-col sm:flex-row items-center gap-3 bg-white p-2 rounded-lg border border-indigo-300">
+                        <div class="text-center">
+                            <span class="text-xs text-slate-500">部屋番号:</span>
+                            <span id="display-room-id" class="font-mono text-xl sm:text-2xl font-bold text-indigo-700 mx-2 tracking-widest bg-indigo-100 px-2 py-1 rounded"></span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="closeRoom()" class="bg-red-100 text-red-600 border border-red-200 px-3 py-1 rounded text-xs font-bold hover:bg-red-200">解散</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- チーム・参加者管理 (Host) -->
+                <div id="host-players-panel" class="hidden w-full bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-slate-200">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-3 border-b pb-2">
+                        <h4 class="font-bold text-slate-700 flex items-center text-sm sm:text-base">👥 参加者 (<span id="panel-player-count">0</span>)</h4>
+                        <div class="flex items-center space-x-3 w-full sm:w-auto justify-between sm:justify-end">
+                            <label class="flex items-center cursor-pointer space-x-1">
+                                <input type="checkbox" id="toggle-team-mode" onchange="toggleTeamMode(event)" class="form-checkbox text-indigo-600 rounded">
+                                <span class="text-xs font-bold text-slate-600">チーム戦</span>
+                            </label>
+                            <button onclick="randomizeTeams()" id="btn-random-team" class="hidden bg-indigo-100 text-indigo-700 border border-indigo-200 px-2 py-1 rounded text-xs font-bold hover:bg-indigo-200">🔀 ランダム割当</button>
+                        </div>
+                    </div>
+                    <!-- チームスコアボード -->
+                    <div id="team-scoreboard" class="hidden grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
+                        <div class="bg-red-50 border border-red-200 rounded text-center py-1"><span class="text-red-700 font-bold text-base sm:text-lg block" id="ts-red">0</span><span class="text-red-600 text-[9px] sm:text-[10px]">RED</span></div>
+                        <div class="bg-blue-50 border border-blue-200 rounded text-center py-1"><span class="text-blue-700 font-bold text-base sm:text-lg block" id="ts-blue">0</span><span class="text-blue-600 text-[9px] sm:text-[10px]">BLUE</span></div>
+                        <div class="bg-green-50 border border-green-200 rounded text-center py-1"><span class="text-green-700 font-bold text-base sm:text-lg block" id="ts-green">0</span><span class="text-green-600 text-[9px] sm:text-[10px]">GREEN</span></div>
+                        <div class="bg-yellow-50 border border-yellow-200 rounded text-center py-1"><span class="text-yellow-700 font-bold text-base sm:text-lg block" id="ts-yellow">0</span><span class="text-yellow-600 text-[9px] sm:text-[10px]">YELLOW</span></div>
+                    </div>
+                    <ul id="host-players-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 max-h-40 overflow-y-auto custom-scroll pr-1"></ul>
+                </div>
+
+                <!-- 参加者の回答ステータス (マルチプレイ時のみ) -->
+                <div id="host-answers-status" class="hidden bg-white p-3 rounded-lg border border-slate-200 shadow-sm text-sm font-bold text-slate-600 text-center">
+                    回答状況: (<span id="answered-count" class="text-indigo-600 text-lg">0</span> / <span id="total-player-count">0</span>)
+                </div>
+
+                <!-- Top Controls -->
+                <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-2">
+                    <div class="text-base sm:text-lg font-bold text-slate-700 flex items-center">
+                        第 <span id="display-current-num" class="text-xl sm:text-2xl text-red-600 mx-2">1</span> 問 / 全 <span id="display-total-num" class="mx-1">1</span> 問
+                        <span id="display-difficulty-badge" class="ml-2 sm:ml-3 text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded border"></span>
+                    </div>
+                    <div class="flex items-center space-x-3 bg-slate-50 p-2 rounded-lg border border-slate-200 w-full sm:w-auto justify-center">
+                        <label class="text-xs font-semibold text-slate-600 whitespace-nowrap">文字送り速度:</label>
+                        <input type="range" id="speed-slider" min="20" max="200" value="80" class="w-full sm:w-24 accent-red-600">
+                        <span id="speed-label" class="text-[10px] text-slate-500 w-8 text-right">普通</span>
+                    </div>
+                </div>
+
+                <!-- Timer (Host) -->
+                <div id="host-timer-container" class="hidden w-full bg-white p-3 rounded-xl shadow-sm border border-slate-200">
+                    <div class="flex justify-between mb-1">
+                        <span class="text-xs font-bold text-red-700" id="host-timer-text">残り時間: 40秒</span>
+                    </div>
+                    <div class="w-full bg-slate-200 rounded-full h-2">
+                        <div id="host-timer-bar" class="bg-red-500 h-2 rounded-full transition-all duration-100" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <!-- Main Quiz Card -->
+                <div class="bg-white rounded-2xl shadow-md border-2 border-slate-200 overflow-hidden flex flex-col md:flex-row min-h-[300px] sm:min-h-[350px]">
+                    <!-- Left: Text Hints -->
+                    <div class="w-full md:w-2/3 p-4 sm:p-6 flex flex-col bg-slate-50 relative">
+                        <div class="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none text-[100px] sm:text-[150px]">📖</div>
+                        <div class="flex-grow z-10 flex flex-col">
+                            <h4 class="text-xs font-bold text-slate-400 mb-2 sm:mb-3 uppercase tracking-widest border-b border-slate-300 pb-1">図鑑データ</h4>
+                            <div class="min-h-[100px] sm:min-h-[120px] mb-4">
+                                <p id="display-desc" class="text-base sm:text-xl text-slate-800 leading-relaxed font-medium typewriter-text"></p>
+                            </div>
+                            <div class="space-y-2 sm:space-y-3 mt-auto">
+                                <div id="display-category-container" class="opacity-0 transition-opacity duration-500 flex items-center bg-white p-2 rounded-lg border border-slate-200 shadow-sm">
+                                    <span class="bg-slate-200 text-slate-600 px-2 sm:px-3 py-1 rounded text-xs font-bold mr-3 w-12 sm:w-14 text-center">分類</span>
+                                    <span id="display-category" class="text-base sm:text-lg font-bold text-slate-800">???</span>
+                                </div>
+                                <div id="display-type-container" class="opacity-0 transition-opacity duration-500 flex items-center bg-white p-2 rounded-lg border border-slate-200 shadow-sm">
+                                    <span class="bg-slate-200 text-slate-600 px-2 sm:px-3 py-1 rounded text-xs font-bold mr-3 w-12 sm:w-14 text-center">タイプ</span>
+                                    <span id="display-type" class="text-base sm:text-lg font-bold text-slate-800">???</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Right: Image Reveal -->
+                    <div class="w-full md:w-1/3 bg-slate-800 p-4 flex items-center justify-center border-t-2 md:border-t-0 md:border-l-2 border-slate-700 min-h-[150px] sm:min-h-[200px] md:min-h-auto relative overflow-hidden">
+                        <div id="image-placeholder" class="text-slate-600 flex flex-col items-center justify-center animate-pulse">
+                            <span class="text-5xl sm:text-6xl">❓</span>
+                        </div>
+                        <img id="display-image" src="" alt="Pokemon" class="hidden absolute inset-0 w-full h-full object-contain p-2 sm:p-4 drop-shadow-2xl transition-transform duration-700 scale-50 opacity-0 bg-white">
+                        <div id="display-correct-name" class="hidden absolute bottom-2 bg-red-600 text-white text-xs sm:text-sm font-bold px-3 py-1 rounded shadow border border-red-800 z-20"></div>
+                    </div>
+                </div>
+
+                <!-- Bottom Controls (Host) -->
+                <div class="flex flex-wrap justify-center gap-2 sm:gap-3 mt-2">
+                    <button id="btn-start" onclick="startQuiz()" class="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-6 rounded-full shadow transition transform hover:scale-105 flex items-center justify-center">
+                        <span class="mr-2">▶️</span> 出題開始
+                    </button>
+                    <button id="btn-next-hint" onclick="showNextHint()" class="w-full sm:w-auto bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2.5 px-5 rounded-full shadow transition hidden items-center justify-center">
+                        <span class="mr-2">🔍</span> 次のヒント
+                    </button>
+                    <button id="btn-reveal" onclick="revealAnswer()" disabled class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-6 rounded-full shadow transition transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed hidden items-center justify-center">
+                        <span class="mr-2">💡</span> 正解発表
+                    </button>
+                    <button id="btn-next" onclick="nextQuestion()" class="w-full sm:w-auto bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 px-6 rounded-full shadow transition hidden items-center justify-center">
+                        <span id="next-text">次の問題へ</span> <span class="ml-2">⏭️</span>
+                    </button>
+                </div>
+
+                <!-- 全員の回答リスト (正解発表時) -->
+                <div id="host-result-list-panel" class="hidden w-full bg-white p-3 sm:p-4 rounded-xl shadow border border-slate-200 mt-2">
+                    <h4 class="font-bold text-slate-700 mb-3 border-b pb-2 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
+                        <span>👥 みんなの回答</span>
+                        <span class="text-red-600 text-sm sm:text-base">正解: <span id="host-result-correct-name"></span></span>
+                    </h4>
+                    <ul id="host-result-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3"></ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 3. GUEST MODE ==================== -->
+        <section id="view-guest" class="hidden flex-grow flex flex-col items-center max-w-3xl mx-auto w-full">
+
+            <!-- Login Panel -->
+            <div id="guest-login-panel" class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg border border-slate-200 w-full max-w-sm mt-4 sm:mt-10">
+                <h2 class="text-xl sm:text-2xl font-bold text-center text-indigo-800 mb-6">🚪 部屋に参加する</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-600 mb-1">部屋番号 (4桁)</label>
+                        <input type="number" id="guest-room-id" placeholder="例: 1234" class="w-full p-3 text-lg font-mono text-center border-2 border-indigo-200 rounded-lg focus:ring-4 focus:ring-indigo-500 outline-none transition tracking-widest">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-slate-600 mb-1">あなたの名前</label>
+                        <input type="text" id="guest-player-name" placeholder="サトシ" class="w-full p-3 text-lg font-bold text-center border-2 border-indigo-200 rounded-lg focus:ring-4 focus:ring-indigo-500 outline-none transition">
+                    </div>
+                    <button onclick="joinRoom()" class="w-full bg-indigo-600 text-white font-bold text-lg py-3 rounded-lg shadow-md hover:bg-indigo-700 transition mt-4">入室する</button>
+                    <p id="guest-login-msg" class="text-red-500 text-sm text-center font-bold hidden"></p>
+                </div>
+            </div>
+
+            <!-- Quiz Panel (Waiting / Playing / Revealed) -->
+            <div id="guest-quiz-panel" class="hidden w-full flex flex-col space-y-3">
+
+                <!-- Status Bar -->
+                <div class="bg-white px-3 py-2 rounded-xl shadow-sm border border-slate-200 flex justify-between items-center">
+                    <div class="font-bold text-slate-600 text-sm flex items-center">
+                        <span class="mr-2">👤</span> <span id="guest-my-name" class="text-indigo-700 truncate max-w-[100px] sm:max-w-[150px]"></span>
+                        <span id="guest-my-score" class="ml-2 sm:ml-3 font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded border border-red-200">0pt</span>
+                    </div>
+                    <button onclick="leaveRoom()" class="text-xs font-bold text-red-500 bg-red-50 px-2 py-1 border border-red-200 rounded hover:bg-red-100">退出</button>
+                </div>
+
+                <!-- チームスコアボード (Guest) -->
+                <div id="guest-team-scoreboard" class="hidden grid-cols-4 gap-1 sm:gap-2 mb-1">
+                    <div class="bg-red-50 border border-red-200 rounded text-center py-1"><span class="text-red-700 font-bold text-sm sm:text-lg block" id="g-ts-red">0</span><span class="text-red-600 text-[8px] sm:text-[10px]">RED</span></div>
+                    <div class="bg-blue-50 border border-blue-200 rounded text-center py-1"><span class="text-blue-700 font-bold text-sm sm:text-lg block" id="g-ts-blue">0</span><span class="text-blue-600 text-[8px] sm:text-[10px]">BLUE</span></div>
+                    <div class="bg-green-50 border border-green-200 rounded text-center py-1"><span class="text-green-700 font-bold text-sm sm:text-lg block" id="g-ts-green">0</span><span class="text-green-600 text-[8px] sm:text-[10px]">GREEN</span></div>
+                    <div class="bg-yellow-50 border border-yellow-200 rounded text-center py-1"><span class="text-yellow-700 font-bold text-sm sm:text-lg block" id="g-ts-yellow">0</span><span class="text-yellow-600 text-[8px] sm:text-[10px]">YELLOW</span></div>
+                </div>
+
+                <!-- Timer (Guest) -->
+                <div id="guest-timer-container" class="hidden w-full bg-white p-3 rounded-xl shadow-sm border border-slate-200">
+                    <div class="flex justify-between mb-1">
+                        <span class="text-xs font-bold text-red-700" id="guest-timer-text">残り時間: 40秒</span>
+                    </div>
+                    <div class="w-full bg-slate-200 rounded-full h-2">
+                        <div id="guest-timer-bar" class="bg-red-500 h-2 rounded-full transition-all duration-100" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <!-- Waiting Screen -->
+                <div id="guest-waiting-screen" class="bg-slate-100 border-2 border-dashed border-slate-300 rounded-2xl p-8 flex flex-col items-center justify-center text-center min-h-[250px] sm:min-h-[300px]">
+                    <div class="loader mb-4 border-indigo-500 border-t-transparent w-8 h-8 sm:w-10 sm:h-10"></div>
+                    <h3 class="text-lg sm:text-xl font-bold text-slate-600 mb-2">ホストの準備を待っています</h3>
+                    <p class="text-xs sm:text-sm text-slate-500">画面はこのままにしてお待ちください。</p>
+                </div>
+
+                <!-- Active Quiz Area -->
+                <div id="guest-active-quiz" class="hidden bg-white rounded-2xl shadow-md border-2 border-indigo-200 overflow-hidden flex flex-col">
+                    <div class="bg-indigo-50 px-4 py-2 border-b border-indigo-100 flex justify-between items-center">
+                        <span class="font-bold text-indigo-800 text-sm">問題 <span id="guest-q-id" class="text-base sm:text-lg mx-1">?</span></span>
+                        <span id="guest-diff-badge" class="text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded border"></span>
+                    </div>
+                    <div class="p-4 sm:p-5 flex flex-col relative min-h-[150px] sm:min-h-[200px]">
+                        <p id="guest-display-desc" class="text-base sm:text-lg text-slate-800 leading-relaxed font-medium"></p>
+                        <div class="space-y-2 mt-4">
+                            <div id="guest-cat-container" class="hidden flex items-center bg-slate-50 p-2 rounded border border-slate-200">
+                                <span class="bg-slate-200 text-slate-600 px-2 py-0.5 rounded text-xs font-bold mr-2 w-10 sm:w-12 text-center">分類</span>
+                                <span id="guest-display-cat" class="text-sm sm:text-base font-bold text-slate-800"></span>
+                            </div>
+                            <div id="guest-type-container" class="hidden flex items-center bg-slate-50 p-2 rounded border border-slate-200">
+                                <span class="bg-slate-200 text-slate-600 px-2 py-0.5 rounded text-xs font-bold mr-2 w-10 sm:w-12 text-center">タイプ</span>
+                                <span id="guest-display-type" class="text-sm sm:text-base font-bold text-slate-800"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Answer Form -->
+                <div id="guest-answer-area" class="hidden w-full bg-indigo-50 p-3 sm:p-4 rounded-xl border border-indigo-200">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-sm font-bold text-indigo-800">回答フォーム</span>
+                        <span class="text-xs font-bold bg-white px-2 py-1 rounded border border-indigo-200 text-indigo-600">残り <span id="guest-attempts-left">3</span> 回</span>
+                    </div>
+                    <form id="guest-form" class="flex flex-col sm:flex-row gap-2 w-full" onsubmit="submitAnswer(event)">
+                        <input type="text" id="guest-answer-input" required placeholder="ポケモンの名前を入力..." class="flex-grow p-3 text-base sm:text-lg font-bold border-2 border-indigo-300 rounded-xl focus:ring-4 focus:ring-indigo-500 outline-none text-center sm:text-left disabled:bg-slate-200">
+                        <button type="submit" id="guest-submit-btn" class="bg-indigo-600 text-white font-bold text-base sm:text-lg px-6 py-3 rounded-xl shadow-md hover:bg-indigo-700 transition whitespace-nowrap disabled:bg-indigo-300">送信</button>
+                    </form>
+                    <div id="guest-answered-msg" class="hidden mt-2">
+                        <!-- Message goes here -->
+                    </div>
+                </div>
+
+                <!-- Image Reveal (Result) -->
+                <div id="guest-image-reveal" class="hidden bg-slate-800 rounded-2xl p-4 flex flex-col items-center justify-center border-2 border-slate-700 relative overflow-hidden">
+                    <img id="guest-display-image" src="" class="w-full max-h-[200px] sm:max-h-[250px] object-contain p-2 drop-shadow-2xl bg-white rounded-xl">
+                    <div class="mt-3 bg-red-600 text-white text-base sm:text-lg font-bold px-6 py-2 rounded-full shadow border-2 border-white z-20"><span id="guest-correct-name"></span></div>
+                </div>
+
+                <!-- All Answers List -->
+                <div id="guest-result-list-panel" class="hidden w-full bg-white p-3 sm:p-4 rounded-xl shadow border border-slate-200">
+                    <h4 class="font-bold text-slate-700 mb-2 sm:mb-3 border-b pb-2 text-sm sm:text-base">👥 みんなの回答</h4>
+                    <ul id="guest-result-list" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></ul>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, getDocs, updateDoc, collection, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // ==========================================
+        // 1. GLOBAL VARIABLES & UTILS
+        // ==========================================
+        // ▼ GitHub Pages 等で公開する場合は、ここにFirebaseプロジェクトの設定を貼り付けます ▼
+        let firebaseConfig = {
+            apiKey: "AIzaSyCCfN__xqSeTlPGABz-QMHc6Dvu7Q0kpkQ",
+            authDomain: "pokemon-quiz-maker.firebaseapp.com",
+            projectId: "pokemon-quiz-maker",
+            storageBucket: "pokemon-quiz-maker.firebasestorage.app",
+            messagingSenderId: "584646136791",
+            appId: "1:584646136791:web:a27c399eeecaf9dc3ab192"
+        };
+        // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
+        try {
+        if (typeof __firebase_config !== 'undefined') {
+        firebaseConfig = typeof __firebase_config === 'string' ? JSON.parse(__firebase_config) : __firebase_config;
+        }
+        } catch(e) { console.error("Firebase config error", e); }
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'pokemon-quiz-app';
+
+        let auth, db, currentUser = null;
+
+        // Editor State
+        let questions = [];
+        let currentMode = 'editor';
+        let currentImageBase64 = null;
+        let editingIndex = null;
+        let typeChartInstance = null;
+
+        // Offline/Host Quiz State
+        let currentQIndex = 0;
+        let quizState = 'idle';
+        let typeStartTime = 0;
+        let typeInterval = null;
+        let charIndex = 0;
+        let currentHintLevel = 0;
+        let currentTextSpeed = 80;
+
+        // Timer State
+        let globalTimerInterval = null;
+        let currentTimerDeadline = null;
+
+        // Multiplayer State
+        let activeRoomId = null;
+        let isHost = false;
+        let unsubscribeRoom = null;
+        let myGuestName = "";
+        let latestRoomData = null;
+        let guestCurrentQuestionId = null;
+
+        // Util: Custom Modal
+        window.showModal = function(message, isConfirm = false) {
+        return new Promise((resolve) => {
+        const modal = document.getElementById('custom-modal');
+        document.getElementById('modal-message').innerHTML = message.replace(/\n/g, '<br>');
+        const cancelBtn = document.getElementById('modal-btn-cancel');
+        const confirmBtn = document.getElementById('modal-btn-confirm');
+        if (isConfirm) cancelBtn.classList.remove('hidden'); else cancelBtn.classList.add('hidden');
+
+        modal.classList.remove('hidden');
+        setTimeout(() => modal.children[0].classList.replace('scale-95', 'scale-100'), 10);
+
+        const cleanup = () => {
+        modal.children[0].classList.replace('scale-100', 'scale-95');
+        setTimeout(() => modal.classList.add('hidden'), 200);
+        confirmBtn.onclick = null; cancelBtn.onclick = null;
+        };
+        confirmBtn.onclick = () => { cleanup(); resolve(true); };
+        cancelBtn.onclick = () => { cleanup(); resolve(false); };
+        });
+        };
+
+        // Util: Image Compressor
+        function compressImage(base64Str, maxWidth, callback) {
+        const img = new Image();
+        img.src = base64Str;
+        img.onload = () => {
+        let width = img.width, height = img.height;
+        if (width > maxWidth) { height = Math.floor(height * (maxWidth / width)); width = maxWidth; }
+        const canvas = document.createElement('canvas');
+        canvas.width = width; canvas.height = height;
+        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+        callback(canvas.toDataURL('image/webp', 0.8));
+        };
+        img.onerror = () => callback(base64Str);
+        }
+
+        // Util: Normalize string for comparison
+        function normalizeAnswer(str) {
+        if (!str) return "";
+        let s = str.replace(/[\s　]/g, '');
+        s = s.replace(/[\u3041-\u3096]/g, m => String.fromCharCode(m.charCodeAt(0) + 0x60));
+        return s;
+        }
+
+        // Util: Timer UI
+        function startTimerUI(deadline, durationSec, prefix) {
+        clearInterval(globalTimerInterval);
+        const container = document.getElementById(`${prefix}-timer-container`);
+        const textEl = document.getElementById(`${prefix}-timer-text`);
+        const barEl = document.getElementById(`${prefix}-timer-bar`);
+        if(!container || !textEl || !barEl) return;
+        container.classList.remove('hidden');
+
+        if (prefix === 'guest') updateGuestFormState(latestRoomData);
+
+        globalTimerInterval = setInterval(() => {
+        const now = Date.now();
+        const remain = Math.max(0, deadline - now);
+        const remainSec = Math.ceil(remain / 1000);
+        textEl.textContent = `残り時間: ${remainSec}秒`;
+        const pct = (remain / (durationSec * 1000)) * 100;
+        barEl.style.width = `${pct}%`;
+
+        if (pct > 50) { barEl.className = 'h-2 rounded-full transition-all duration-100 bg-green-500'; textEl.className = 'text-xs font-bold text-green-700'; }
+        else if (pct > 20) { barEl.className = 'h-2 rounded-full transition-all duration-100 bg-yellow-500'; textEl.className = 'text-xs font-bold text-yellow-700'; }
+        else { barEl.className = 'h-2 rounded-full transition-all duration-100 bg-red-500'; textEl.className = 'text-xs font-bold text-red-700'; }
+
+        if (remain <= 0) {
+        clearInterval(globalTimerInterval);
+        textEl.textContent = `時間切れ！`;
+        if (prefix === 'guest') {
+        updateGuestFormState(latestRoomData);
+        }
+        }
+        }, 100);
+        }
+
+        // Util: Typewriter
+        function startTypewriter(text, speedMs, elementId, onComplete, startTimeOverride = null) {
+        const dEl = document.getElementById(elementId);
+        if(!dEl) return;
+        dEl.textContent = '';
+        dEl.classList.add('typewriter-text');
+
+        typeStartTime = startTimeOverride || Date.now();
+        clearInterval(typeInterval);
+        charIndex = 0;
+
+        typeInterval = setInterval(() => {
+        const now = Date.now();
+        const elapsed = Math.max(0, now - typeStartTime);
+        const charsToShow = Math.floor(elapsed / speedMs);
+
+        if (charsToShow < text.length) {
+        dEl.textContent = text.substring(0, charsToShow);
+        charIndex = charsToShow;
+        } else {
+        dEl.textContent = text;
+        dEl.classList.remove('typewriter-text');
+        clearInterval(typeInterval);
+        charIndex = text.length;
+        if (onComplete) onComplete();
+        }
+        }, 50);
+        }
+
+        // ==========================================
+        // 2. INITIALIZATION
+        // ==========================================
+        async function init() {
+        await initFirebase();
+        loadLocalData();
+        setupEditorForm();
+        setupSpeedSlider();
+        }
+
+        async function initFirebase() {
+        if (Object.keys(firebaseConfig).length === 0 || !firebaseConfig.apiKey) {
+        const as = document.getElementById('auth-status');
+        if(as) as.textContent = "設定なし (ローカル専用)";
+        currentUser = { uid: "guest_" + Date.now() + Math.floor(Math.random()*1000) };
+        return;
+        }
+        const app = initializeApp(firebaseConfig);
+        auth = getAuth(app);
+        db = getFirestore(app);
+
+        onAuthStateChanged(auth, (user) => {
+        if(user) {
+        currentUser = user;
+        const statusEl = document.getElementById('auth-status');
+        if(statusEl) {
+        statusEl.textContent = `✅ ログイン済 (${user.uid.substring(0, 4)}...)`;
+        statusEl.classList.replace('text-slate-500', 'text-green-600');
+        }
+        const btnSave = document.getElementById('btn-save-cloud');
+        const btnLoad = document.getElementById('btn-load-cloud');
+        if(btnSave) btnSave.disabled = false;
+        if(btnLoad) btnLoad.disabled = false;
+        }
+        });
+
+        const initAuth = async () => {
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+        await signInWithCustomToken(auth, __initial_auth_token);
+        } else {
+        await signInAnonymously(auth);
+        }
+        };
+
+        const delays = [1000, 2000, 4000, 8000, 16000];
+        for (let i = 0; i <= delays.length; i++) {
+        try {
+        await initAuth();
+        break;
+        } catch (e) {
+        if (i === delays.length) {
+        console.error("Auth init failed:", e);
+        if (!currentUser) currentUser = { uid: "guest_" + Date.now().toString(36) };
+        const statusEl = document.getElementById('auth-status');
+        if(statusEl) statusEl.textContent = "ログインエラー (リロード推奨)";
+        } else {
+        await new Promise(r => setTimeout(r, delays[i]));
+        }
+        }
+        }
+        }
+
+        function loadLocalData() {
+        const saved = localStorage.getItem('pokemonQuizData');
+        if (saved) {
+        try {
+        let parsed = JSON.parse(saved);
+        questions = parsed.map(q => {
+        if (q.descEasy !== undefined) { q.desc = q.descEasy; q.difficulty = 'easy'; delete q.descEasy; delete q.descHard; }
+        if (!q.pokemonName) q.pokemonName = "未設定";
+        return q;
+        });
+        } catch(e) { questions = []; }
+        }
+        renderQuestionList();
+        updateChart();
+        }
+
+        function saveLocalData() {
+        localStorage.setItem('pokemonQuizData', JSON.stringify(questions));
+        }
+
+        // ==========================================
+        // 3. CLOUD SYNC (Questions)
+        // ==========================================
+        window.saveToCloud = async function() {
+        if (!currentUser || currentUser.uid.startsWith("guest_")) { await showModal("ログインしていません"); return; }
+        if (questions.length === 0) { if (!await showModal("問題が0件です。クラウドを空にしますか？", true)) return; }
+        const btn = document.getElementById('btn-save-cloud');
+        if(btn) { btn.disabled = true; btn.textContent = "保存中..."; }
+
+        try {
+        const colRef = collection(db, 'artifacts', appId, 'users', currentUser.uid, 'questions');
+        const snapshot = await getDocs(colRef);
+        await Promise.all(snapshot.docs.map(docSnap => deleteDoc(docSnap.ref)));
+        await Promise.all(questions.map(q => setDoc(doc(colRef, q.id.toString()), q)));
+        await showModal("保存完了！");
+        } catch (e) { await showModal("保存エラー"); }
+        finally { if(btn) { btn.disabled = false; btn.textContent = "今すぐ保存"; } }
+        };
+
+        window.loadFromCloud = async function() {
+        if (!currentUser || currentUser.uid.startsWith("guest_")) { await showModal("ログインしていません"); return; }
+        const btn = document.getElementById('btn-load-cloud');
+        if(btn) { btn.disabled = true; btn.textContent = "読込中..."; }
+        try {
+        const colRef = collection(db, 'artifacts', appId, 'users', currentUser.uid, 'questions');
+        const snapshot = await getDocs(colRef);
+        if (snapshot.empty) { await showModal("データがありません"); return; }
+        const loaded = [];
+        snapshot.forEach(d => loaded.push(d.data()));
+        loaded.sort((a, b) => a.id - b.id);
+
+        if (await showModal("上書きしますか？", true)) {
+        questions = loaded;
+        cancelEdit();
+        saveLocalData();
+        renderQuestionList();
+        updateChart();
+        await showModal("読込完了！");
+        }
+        } catch(e) { await showModal("読込エラー"); }
+        finally { if(btn) { btn.disabled = false; btn.textContent = "クラウド読込"; } }
+        };
+
+        // ==========================================
+        // 4. EDITOR LOGIC & PokeAPI
+        // ==========================================
+        window.switchMode = function(mode) {
+        currentMode = mode;
+        ['editor', 'quiz', 'guest'].forEach(m => {
+        const view = document.getElementById(`view-${m}`);
+        if(view) view.classList.add('hidden');
+        const tab = document.getElementById(`tab-${m}`);
+        if(tab) {
+        tab.classList.replace('bg-white', 'bg-red-700');
+        tab.classList.replace('text-red-600', 'text-white');
+        }
+        });
+        const vMode = document.getElementById(`view-${mode}`);
+        if(vMode) vMode.classList.remove('hidden');
+        const activeTab = document.getElementById(`tab-${mode}`);
+        if(activeTab) {
+        activeTab.classList.replace('bg-red-700', 'bg-white');
+        activeTab.classList.replace('text-white', 'text-red-600');
+        }
+
+        if (mode === 'editor') {
+        if(activeRoomId && isHost) closeRoom();
+        if(activeRoomId && !isHost) leaveRoom();
+        } else if (mode === 'quiz') {
+        if(activeRoomId && !isHost) leaveRoom();
+        prepareHostQuizView();
+        } else if (mode === 'guest') {
+        if(activeRoomId && isHost) closeRoom();
+        resetGuestView();
+        }
+        };
+
+        function setupEditorForm() {
+        const inputImg = document.getElementById('input-image');
+        if(inputImg) {
+        inputImg.addEventListener('change', (e) => {
+        if (e.target.files[0]) {
+        const reader = new FileReader();
+        reader.onload = (ev) => compressImage(ev.target.result, 300, (b64) => {
+        currentImageBase64 = b64;
+        const pImg = document.getElementById('preview-image');
+        if(pImg) { pImg.src = b64; pImg.classList.remove('hidden'); }
+        const pPlace = document.getElementById('preview-placeholder');
+        if(pPlace) pPlace.classList.add('hidden');
+        });
+        reader.readAsDataURL(e.target.files[0]);
+        } else clearPreviewImage();
+        });
+        }
+
+        const quizForm = document.getElementById('quiz-form');
+        if(quizForm) {
+        quizForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!currentImageBase64) { await showModal('画像が必要です'); return; }
+        const diffRadio = document.querySelector('input[name="difficulty"]:checked');
+        const diff = diffRadio ? diffRadio.value : 'easy';
+        const qData = {
+        id: editingIndex !== null ? questions[editingIndex].id : Date.now(),
+        pokemonName: document.getElementById('input-pokemon-name').value.trim(),
+        difficulty: diff,
+        desc: document.getElementById('input-desc').value.trim(),
+        category: document.getElementById('input-category').value.trim(),
+        type: document.getElementById('input-type').value.trim(),
+        image: currentImageBase64
+        };
+        if (editingIndex !== null) { questions[editingIndex] = qData; cancelEdit(); }
+        else {
+        questions.push(qData);
+        e.target.reset();
+        clearPreviewImage();
+        const qList = document.getElementById('question-list');
+        if(qList) setTimeout(() => qList.scrollTop = 9999, 50);
+        }
+        saveLocalData();
+        renderQuestionList();
+        updateChart();
+        });
+        }
+        }
+
+        function clearPreviewImage() {
+        currentImageBase64 = null;
+        const pImg = document.getElementById('preview-image');
+        if(pImg) { pImg.classList.add('hidden'); pImg.src = ''; }
+        const pPlace = document.getElementById('preview-placeholder');
+        if(pPlace) pPlace.classList.remove('hidden');
+        const inImg = document.getElementById('input-image');
+        if(inImg) inImg.value = '';
+        }
+
+        window.cancelEdit = function() {
+        editingIndex = null;
+        const qForm = document.getElementById('quiz-form');
+        if(qForm) qForm.reset();
+        clearPreviewImage();
+        const fTitle = document.getElementById('form-title');
+        if(fTitle) fTitle.textContent = '➕ 新しい問題';
+        const eBadge = document.getElementById('edit-badge');
+        if(eBadge) eBadge.classList.add('hidden');
+        const bSubmit = document.getElementById('btn-submit');
+        if(bSubmit) bSubmit.textContent = 'リストに追加';
+        const bCancel = document.getElementById('btn-cancel');
+        if(bCancel) bCancel.classList.add('hidden');
+        renderQuestionList();
+        };
+
+        window.fetchPokemonData = async function() {
+        const rawInput = document.getElementById('auto-search-name').value.trim();
+        const msgEl = document.getElementById('fetch-msg');
+        const btnText = document.getElementById('fetch-text');
+        if (!rawInput) { if(msgEl) {msgEl.textContent='名前を入力して下さい'; msgEl.classList.remove('hidden');} return; }
+
+        if(msgEl) msgEl.classList.add('hidden');
+        const fLoader = document.getElementById('fetch-loader');
+        if(fLoader) fLoader.classList.remove('hidden');
+        if(btnText) btnText.textContent = '取得中...';
+        const bAuto = document.getElementById('btn-auto-fetch');
+        if(bAuto) bAuto.disabled = true;
+
+        let baseName = rawInput.split(/[\s　]+/)[0];
+        let formKeyword = "", formNameJP = "";
+        if (rawInput.includes("アローラ")) { formKeyword = "alola"; formNameJP = "アローラのすがた"; baseName = baseName.replace("アローラ",""); }
+        else if (rawInput.includes("ガラル")) { formKeyword = "galar"; formNameJP = "ガラルのすがた"; baseName = baseName.replace("ガラル",""); }
+        else if (rawInput.includes("ヒスイ")) { formKeyword = "hisui"; formNameJP = "ヒスイのすがた"; baseName = baseName.replace("ヒスイ",""); }
+        else if (rawInput.includes("パルデア")) { formKeyword = "paldea"; formNameJP = "パルデアのすがた"; baseName = baseName.replace("パルデア",""); }
+        else if (rawInput.includes("メガ")) { formKeyword = "mega"; formNameJP = "メガシンカ"; baseName = baseName.replace("メガ",""); }
+
+        try {
+        const query = `query getP($name:String!){ pokemon_v2_pokemonspecies(where:{pokemon_v2_pokemonspeciesnames:{name:{_eq:$name},language_id:{_in:[1,11]}}}){ id pokemon_v2_pokemonspeciesnames(where:{language_id:{_in:[1,11]}}){ genus } pokemon_v2_pokemonspeciesflavortexts(where:{language_id:{_in:[1,11]}},order_by:{version_id:desc}){ flavor_text pokemon_v2_version{name} } pokemon_v2_pokemons{ id name pokemon_v2_pokemontypes{ pokemon_v2_type{ pokemon_v2_typenames(where:{language_id:{_in:[1,11]}}){name} } } } } }`;
+        const res = await fetch('https://beta.pokeapi.co/graphql/v1beta', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({query, variables:{name:baseName}}) });
+        const data = await res.json();
+        const speciesArr = data.data?.pokemon_v2_pokemonspecies;
+        if (!speciesArr || speciesArr.length === 0) throw new Error('見つかりません');
+        const species = speciesArr[0];
+
+        let selectedP = species.pokemon_v2_pokemons[0];
+        if (formKeyword) selectedP = species.pokemon_v2_pokemons.find(p=>p.name.includes(formKeyword)) || selectedP;
+
+        let category = species.pokemon_v2_pokemonspeciesnames.find(n=>n.genus)?.genus || '';
+
+        if(btnText) btnText.textContent = '画像...';
+        const imgB64 = await new Promise(async r => {
+        const blob = await (await fetch(`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${selectedP.id}.png`)).blob();
+        const reader = new FileReader(); reader.onloadend = () => compressImage(reader.result, 300, r); reader.readAsDataURL(blob);
+        });
+
+        let fTexts = species.pokemon_v2_pokemonspeciesflavortexts;
+        let easyDesc = "", hardDesc = "", typeStr = "";
+
+        if (fTexts.length === 0 || !category) {
+        if(btnText) btnText.textContent = 'Wiki...';
+        try {
+        const wikiUrl = `https://wiki.xn--rckteqa2e.com/wiki/${encodeURIComponent(baseName)}`;
+        let html = null;
+        for (let proxy of [`https://api.allorigins.win/get?url=${encodeURIComponent(wikiUrl)}`, `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(wikiUrl)}`]) {
+        try { const pr = await fetch(proxy); if(pr.ok) { if(proxy.includes('all')) html = (await pr.json()).contents; else html = await pr.text(); break; } } catch(e){}
+        }
+        if(html) {
+        const doc = new DOMParser().parseFromString(html, "text/html");
+        if(!category) { const th=Array.from(doc.querySelectorAll('th')).find(t=>t.textContent.includes('分類')); if(th?.nextElementSibling) category = th.nextElementSibling.textContent.replace(/\[\d+\]/g,'').trim(); }
+        const tTh=Array.from(doc.querySelectorAll('th')).find(t=>t.textContent.includes('タイプ')&&!t.textContent.includes('タマゴ'));
+        if(tTh?.nextElementSibling) typeStr = Array.from(tTh.nextElementSibling.querySelectorAll('a')).map(a=>a.textContent.trim()).filter(t=>t!=='タイプ'&&t!=='・').join(' / ');
+
+        if(fTexts.length === 0) {
+        const h=Array.from(doc.querySelectorAll('h2,h3')).find(hl=>hl.textContent.includes('図鑑'));
+        if(h) {
+        let el=h.nextElementSibling, txts=[];
+        while(el && !['H2','H3'].includes(el.tagName)) {
+        if(el.tagName==='TABLE') {
+        for(let r of el.querySelectorAll('tr')) {
+        let isT = !formNameJP;
+        const fTh=r.querySelector('th[colspan]');
+        if(fTh) { if(formNameJP&&fTh.textContent.includes(formNameJP)) isT=true; else if(formNameJP&&!fTh.textContent.includes(formNameJP)&&(fTh.textContent.includes('のすがた')||fTh.textContent.includes('メガ'))) isT=false; }
+        if(isT) { for(let td of r.querySelectorAll('td')) { let t=td.textContent.replace(/\[\d+\]/g,'').replace(/[\n\r]/g,' ').trim(); if(t.length>10&&!t.includes('ポケモン')&&!t.includes('高さ')) txts.push(t); } }
+        }
+        }
+        el=el.nextElementSibling;
+        }
+        if(txts.length>0) { let u=[...new Set(txts)]; easyDesc=u[0]; hardDesc=u[u.length-1]; }
+        }
+        }
+        }
+        } catch(e){}
+        }
+
+        if(!category) category = 'ふめい';
+        if(fTexts.length > 0) {
+        let uTexts = [...new Set(fTexts.map(f=>f.flavor_text.replace(/[\n\f\r\t]/g,' ').trim()))].filter(t=>t);
+        if(uTexts.length===1) { easyDesc=uTexts[0]; hardDesc=uTexts[0]; }
+        else if(uTexts.length>1) {
+        const kw = ['色','赤','青','緑','丸','角','尻尾','羽','目','顔','腕','足','大','小','体','毛','牙','爪','模様','甲羅'];
+        uTexts.sort((a,b) => kw.reduce((c,k)=>c+(b.includes(k)?1:0),0) - kw.reduce((c,k)=>c+(a.includes(k)?1:0),0) || b.length - a.length);
+        easyDesc=uTexts[0]; hardDesc=uTexts[uTexts.length-1];
+        }
+        }
+        if(!typeStr) typeStr = (selectedP.pokemon_v2_pokemontypes||[]).map(t=>t.pokemon_v2_type.pokemon_v2_typenames?.[0]?.name).filter(Boolean).join(' / ') || 'ふめい';
+
+        const iName = document.getElementById('input-pokemon-name'); if(iName) iName.value = baseName + (formNameJP ? ` (${formNameJP})` : "");
+        const iCat = document.getElementById('input-category'); if(iCat) iCat.value = category;
+        const iType = document.getElementById('input-type'); if(iType) iType.value = typeStr;
+        const dRadio = document.querySelector('input[name="difficulty"]:checked');
+        const iDesc = document.getElementById('input-desc');
+        if(iDesc && dRadio) iDesc.value = dRadio.value==='easy' ? easyDesc : hardDesc;
+
+        currentImageBase64 = imgB64;
+        const pImg = document.getElementById('preview-image');
+        if(pImg) { pImg.src = imgB64; pImg.classList.remove('hidden'); }
+        const pPlace = document.getElementById('preview-placeholder');
+        if(pPlace) pPlace.classList.add('hidden');
+
+        if(msgEl) { msgEl.textContent = '取得成功！'; msgEl.className = 'text-xs text-green-600 mt-2'; msgEl.classList.remove('hidden'); }
+        setTimeout(() => { if(msgEl) msgEl.classList.add('hidden'); }, 3000);
+        } catch(e) {
+        if(msgEl) { msgEl.textContent = e.message; msgEl.className = 'text-xs text-red-500 mt-2'; msgEl.classList.remove('hidden'); }
+        } finally {
+        if(fLoader) fLoader.classList.add('hidden');
+        if(btnText) btnText.textContent = '取得';
+        if(bAuto) bAuto.disabled = false;
+        }
+        };
+
+        window.deleteQuestion = async function(idx) { if(await showModal('削除しますか？',true)){ questions.splice(idx,1); if(editingIndex===idx) cancelEdit(); else if(editingIndex!==null && editingIndex>idx) editingIndex--; saveLocalData(); renderQuestionList(); updateChart(); } };
+        window.clearAllQuestions = async function() { if(questions.length===0) return; if(await showModal('全て削除しますか？',true)){ questions=[]; cancelEdit(); saveLocalData(); renderQuestionList(); updateChart(); } };
+        window.moveQuestion = function(idx, d) {
+        if((d===-1&&idx>0) || (d===1&&idx<questions.length-1)) {
+        [questions[idx], questions[idx+d]] = [questions[idx+d], questions[idx]];
+        if(editingIndex===idx) editingIndex+=d; else if(editingIndex!==null && editingIndex===idx+d) editingIndex=idx;
+        saveLocalData(); renderQuestionList();
+        }
+        };
+        window.editQuestion = function(idx) {
+        editingIndex = idx; const q = questions[idx];
+        const iName = document.getElementById('input-pokemon-name'); if(iName) iName.value = q.pokemonName;
+        const diffRad = document.querySelector(`input[name="difficulty"][value="${q.difficulty||'easy'}"]`); if(diffRad) diffRad.checked = true;
+        const iDesc = document.getElementById('input-desc'); if(iDesc) iDesc.value = q.desc;
+        const iCat = document.getElementById('input-category'); if(iCat) iCat.value = q.category;
+        const iType = document.getElementById('input-type'); if(iType) iType.value = q.type;
+        currentImageBase64 = q.image;
+        const pImg = document.getElementById('preview-image'); if(pImg) { pImg.src = q.image; pImg.classList.remove('hidden'); }
+        const pPlace = document.getElementById('preview-placeholder'); if(pPlace) pPlace.classList.add('hidden');
+
+        const fTitle = document.getElementById('form-title'); if(fTitle) fTitle.textContent = '✏️ 編集';
+        const eBadge = document.getElementById('edit-badge'); if(eBadge) eBadge.classList.remove('hidden');
+        const bSub = document.getElementById('btn-submit'); if(bSub) bSub.textContent = '保存';
+        const bCan = document.getElementById('btn-cancel'); if(bCan) bCan.classList.remove('hidden');
+        renderQuestionList();
+        const qForm = document.getElementById('quiz-form'); if(qForm) qForm.scrollIntoView({behavior:'smooth'});
+        };
+
+        function renderQuestionList() {
+        const list = document.getElementById('question-list');
+        if(!list) return;
+        const qc = document.getElementById('question-count');
+        if(qc) qc.textContent = questions.length;
+        if(questions.length===0) { list.innerHTML='<div class="text-center text-slate-400 py-10 text-sm">問題がありません</div>'; return; }
+        list.innerHTML='';
+        questions.forEach((q, i) => {
+        const item = document.createElement('div');
+        const isEd = (editingIndex === i);
+        item.className = `p-2 rounded flex justify-between items-center border ${isEd?'bg-yellow-50 border-yellow-300':'bg-slate-50 border-slate-200'}`;
+        const diffBadge = q.difficulty==='hard'?'<span class="text-[9px] bg-red-100 text-red-700 px-1 rounded ml-1 flex-shrink-0">難</span>':'<span class="text-[9px] bg-blue-100 text-blue-700 px-1 rounded ml-1 flex-shrink-0">易</span>';
+        item.innerHTML = `
+        <div class="flex items-center space-x-2 overflow-hidden w-full">
+        <span class="font-bold text-slate-400 text-xs w-4 flex-shrink-0">${i+1}.</span>
+        <img src="${q.image}" class="w-8 h-8 object-contain bg-white border rounded p-0.5 flex-shrink-0">
+        <div class="flex flex-col min-w-0 flex-grow">
+        <span class="font-bold text-slate-700 text-xs truncate flex items-center">${q.pokemonName} ${diffBadge}</span>
+        <span class="text-[9px] text-slate-500 truncate">${q.category} / ${q.type}</span>
+        </div>
+        </div>
+        <div class="flex space-x-1 flex-shrink-0 ml-2">
+        <button onclick="editQuestion(${i})" class="p-1 text-blue-500 hover:bg-blue-100 rounded">✏️</button>
+        <button onclick="moveQuestion(${i},-1)" class="p-1 text-slate-400 hover:bg-slate-200 rounded" ${i===0?'disabled':''}>⬆️</button>
+        <button onclick="moveQuestion(${i},1)" class="p-1 text-slate-400 hover:bg-slate-200 rounded" ${i===questions.length-1?'disabled':''}>⬇️</button>
+        <button onclick="deleteQuestion(${i})" class="p-1 text-red-400 hover:bg-red-100 rounded">❌</button>
+        </div>`;
+        list.appendChild(item);
+        });
+        }
+
+        function updateChart() {
+        const canvasEl = document.getElementById('typeChart');
+        if(!canvasEl) return;
+        const ctx = canvasEl.getContext('2d');
+        const msgEl = document.getElementById('empty-chart-msg');
+        if(questions.length===0) { if(msgEl) msgEl.classList.remove('hidden'); canvasEl.style.display='none'; return; }
+        if(msgEl) msgEl.classList.add('hidden'); canvasEl.style.display='block';
+        const tc = {}; questions.forEach(q => { const t=(q.type||"").split('/')[0].trim(); if(t) tc[t]=(tc[t]||0)+1; });
+        const lbl=Object.keys(tc), dat=Object.values(tc);
+        const cols = {'ノーマル':'#A8A77A','ほのお':'#EE8130','みず':'#6390F0','でんき':'#F7D02C','くさ':'#7AC74C','こおり':'#96D9D6','かくとう':'#C22E28','どく':'#A33EA1','じめん':'#E2BF65','ひこう':'#A98FF3','エスパー':'#F95587','むし':'#A6B91A','いわ':'#B6A136','ゴースト':'#735797','ドラゴン':'#6F35FC','あく':'#705746','はがね':'#B7B7CE','フェアリー':'#D685AD'};
+        const bg = lbl.map(l=>cols[l]||'#94a3b8');
+        if(typeChartInstance) { typeChartInstance.data.labels=lbl; typeChartInstance.data.datasets[0].data=dat; typeChartInstance.data.datasets[0].backgroundColor=bg; typeChartInstance.update(); }
+        else { typeChartInstance = new Chart(ctx, { type:'doughnut', data:{labels:lbl, datasets:[{data:dat, backgroundColor:bg, borderWidth:1}]}, options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'right',labels:{boxWidth:10,font:{size:9}}}}, cutout:'60%'} }); }
+        }
+
+        // ==========================================
+        // 5. HOST / OFFLINE QUIZ LOGIC
+        // ==========================================
+        function setupSpeedSlider() {
+        const sl = document.getElementById('speed-slider');
+        if(sl) {
+        sl.addEventListener('input', e => {
+        const v = parseInt(e.target.value); currentTextSpeed = 220 - v;
+        const sLbl = document.getElementById('speed-label');
+        if(sLbl) sLbl.textContent = currentTextSpeed<50?'超速':currentTextSpeed<100?'速い':currentTextSpeed<150?'普通':'遅い';
+        });
+        sl.dispatchEvent(new Event('input'));
+        }
+        }
+
+        function prepareHostQuizView() {
+        if(questions.length===0) {
+        const qc = document.getElementById('quiz-container'); if(qc) qc.classList.add('hidden');
+        const qs = document.getElementById('quiz-setup-msg'); if(qs) qs.classList.remove('hidden');
+        return;
+        }
+        const qc = document.getElementById('quiz-container'); if(qc) qc.classList.remove('hidden');
+        const qs = document.getElementById('quiz-setup-msg'); if(qs) qs.classList.add('hidden');
+        currentQIndex = 0;
+        setupHostQuestionUI();
+        }
+
+        function setupHostQuestionUI() {
+        resetHostQuizState();
+        const q = questions[currentQIndex];
+        if(!q) return;
+
+        const dcNum = document.getElementById('display-current-num'); if(dcNum) dcNum.textContent = currentQIndex + 1;
+        const dtNum = document.getElementById('display-total-num'); if(dtNum) dtNum.textContent = questions.length;
+        const bEl = document.getElementById('display-difficulty-badge');
+        if(bEl) {
+        bEl.textContent = q.difficulty==='hard'?'🔴 難しい':'🔵 易しい';
+        bEl.className = `ml-2 sm:ml-3 text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded border ${q.difficulty==='hard'?'bg-red-100 text-red-700 border-red-300':'bg-blue-100 text-blue-700 border-blue-300'}`;
+        }
+
+        const dDesc = document.getElementById('display-desc');
+        if(dDesc) { dDesc.textContent = ''; dDesc.classList.remove('typewriter-text'); }
+
+        const dCatC = document.getElementById('display-category-container'); if(dCatC) dCatC.classList.add('opacity-0');
+        const dTypC = document.getElementById('display-type-container'); if(dTypC) dTypC.classList.add('opacity-0');
+
+        const iEl = document.getElementById('display-image');
+        if(iEl) { iEl.classList.add('hidden', 'opacity-0', 'scale-50'); iEl.classList.remove('scale-100', 'opacity-100'); iEl.src = ''; }
+        const iPlace = document.getElementById('image-placeholder'); if(iPlace) iPlace.classList.remove('hidden');
+        const dCorr = document.getElementById('display-correct-name'); if(dCorr) dCorr.classList.add('hidden');
+        const hResList = document.getElementById('host-result-list-panel'); if(hResList) hResList.classList.add('hidden');
+
+        const bStart = document.getElementById('btn-start'); if(bStart) { bStart.classList.remove('hidden'); bStart.classList.add('flex'); }
+        ['btn-next-hint','btn-reveal','btn-next'].forEach(id => {
+        const el = document.getElementById(id);
+        if(el) { el.classList.add('hidden'); el.classList.remove('flex'); }
+        });
+        const br = document.getElementById('btn-reveal'); if(br) br.disabled = true;
+
+        clearInterval(globalTimerInterval);
+        const tc = document.getElementById('host-timer-container'); if(tc) tc.classList.add('hidden');
+
+        if (activeRoomId && isHost) {
+        setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'rooms', activeRoomId), {
+        status: 'waiting', currentQuestion: q, hintLevel: 0, answers: {}, timerDeadline: null
+        }, { merge: true }).catch(e=>console.error(e));
+        }
+        }
+
+        function resetHostQuizState() {
+        clearInterval(typeInterval); quizState = 'idle'; charIndex = 0; currentHintLevel = 0;
+        }
+
+        window.startQuiz = function() {
+        const bS = document.getElementById('btn-start'); if(bS) { bS.classList.add('hidden'); bS.classList.remove('flex'); }
+        const bNH = document.getElementById('btn-next-hint'); if(bNH) { bNH.classList.remove('hidden'); bNH.classList.add('flex'); }
+        const bRev = document.getElementById('btn-reveal'); if(bRev) { bRev.classList.remove('hidden'); bRev.classList.add('flex'); bRev.disabled = false; }
+        quizState = 'playing';
+
+        const serverStartAt = Date.now();
+
+        if (activeRoomId && isHost) {
+        setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'rooms', activeRoomId), {
+        status: 'playing',
+        hintLevel: 0,
+        timerDeadline: serverStartAt + 40000,
+        timerDuration: 40,
+        typeStartAt: serverStartAt,
+        typeSpeedMs: currentTextSpeed
+        }, { merge: true }).catch(e=>console.error(e));
+        }
+
+        startTimerUI(serverStartAt + 40000, 40, 'host');
+
+        startTypewriter(questions[currentQIndex].desc || "", currentTextSpeed, 'display-desc', () => {
+        quizState = 'waiting_hint';
+        }, serverStartAt);
+        };
+
+        window.showNextHint = function() {
+        const q = questions[currentQIndex];
+        let dur = 0;
+        if (currentHintLevel === 0) {
+        const dCat = document.getElementById('display-category'); if(dCat) dCat.textContent = q.category;
+        const dCatC = document.getElementById('display-category-container'); if(dCatC) dCatC.classList.remove('opacity-0');
+        currentHintLevel = 1;
+        dur = 30; // 分類
+        } else if (currentHintLevel === 1) {
+        const dType = document.getElementById('display-type'); if(dType) dType.textContent = q.type;
+        const dTypC = document.getElementById('display-type-container'); if(dTypC) dTypC.classList.remove('opacity-0');
+        currentHintLevel = 2;
+        dur = 20; // タイプ
+        const bNH = document.getElementById('btn-next-hint'); if(bNH) { bNH.classList.add('hidden'); bNH.classList.remove('flex'); }
+        quizState = 'waiting';
+        }
+
+        const newDeadline = Date.now() + dur * 1000;
+        startTimerUI(newDeadline, dur, 'host');
+
+        if (activeRoomId && isHost) {
+        setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'rooms', activeRoomId), {
+        hintLevel: currentHintLevel, timerDeadline: newDeadline, timerDuration: dur
+        }, { merge: true }).catch(e=>console.error(e));
+        }
+        };
+
+        window.togglePause = function() {
+        // Feature disabled for timer compatibility
+        };
+
+        window.revealAnswer = function() {
+        clearInterval(typeInterval); quizState = 'revealed'; const q = questions[currentQIndex];
+        if(!q) return;
+
+        const dD = document.getElementById('display-desc'); if(dD) { dD.textContent = q.desc; dD.classList.remove('typewriter-text'); }
+        const dC = document.getElementById('display-category'); if(dC) dC.textContent = q.category;
+        const dCC = document.getElementById('display-category-container'); if(dCC) dCC.classList.remove('opacity-0');
+        const dT = document.getElementById('display-type'); if(dT) dT.textContent = q.type;
+        const dTC = document.getElementById('display-type-container'); if(dTC) dTC.classList.remove('opacity-0');
+
+        const iPl = document.getElementById('image-placeholder'); if(iPl) iPl.classList.add('hidden');
+        const iEl = document.getElementById('display-image'); if(iEl) { iEl.src = q.image; iEl.classList.remove('hidden'); }
+        const dCN = document.getElementById('display-correct-name'); if(dCN) { dCN.textContent = q.pokemonName; dCN.classList.remove('hidden'); }
+
+        requestAnimationFrame(() => { if(iEl){ iEl.classList.replace('scale-50','scale-100'); iEl.classList.replace('opacity-0','opacity-100'); } });
+
+        ['btn-next-hint','btn-reveal'].forEach(id => { const el = document.getElementById(id); if(el) { el.classList.add('hidden'); el.classList.remove('flex'); } });
+        const bN = document.getElementById('btn-next'); if(bN) { bN.classList.remove('hidden'); bN.classList.add('flex'); }
+        const nT = document.getElementById('next-text'); if(nT) nT.textContent = (currentQIndex === questions.length - 1) ? '結果へ / エディタへ' : '次の問題へ';
+
+        clearInterval(globalTimerInterval);
+        const tc = document.getElementById('host-timer-container'); if(tc) tc.classList.add('hidden');
+
+        if (activeRoomId && isHost && latestRoomData) {
+        const players = latestRoomData.players || {};
+        const answers = latestRoomData.answers || {};
+        const newPlayers = { ...players };
+
+        setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'rooms', activeRoomId), {
+        status: 'revealed', hintLevel: 3, timerDeadline: null, players: newPlayers
+        }, { merge: true }).catch(e=>console.error(e));
+
+        renderHostResultList(q.pokemonName, newPlayers, answers);
+        const hRLP = document.getElementById('host-result-list-panel'); if(hRLP) hRLP.classList.remove('hidden');
+        } else if (!activeRoomId) {
+        renderHostResultList(q.pokemonName, {}, {});
+        }
+        };
+
+        window.nextQuestion = async function() {
+        if (currentQIndex < questions.length - 1) {
+        currentQIndex++; setupHostQuestionUI();
+        } else {
+        if (await showModal('全問終了しました！エディタに戻りますか？', true)) switchMode('editor');
+        }
+        };
+
+        function renderPlayersPanel() {
+        if (!latestRoomData || !isHost) return;
+        const players = latestRoomData.players || {};
+        const answers = latestRoomData.answers || {};
+        const currentHL = latestRoomData.hintLevel || 0;
+        const uids = Object.keys(players);
+
+        const onlineCount = uids.filter(id => players[id].online).length;
+        const panelCountEl = document.getElementById('panel-player-count'); if(panelCountEl) panelCountEl.textContent = onlineCount;
+        const displayCountEl = document.getElementById('display-player-count'); if(displayCountEl) displayCountEl.textContent = onlineCount;
+        const answeredCountEl = document.getElementById('answered-count'); if(answeredCountEl) answeredCountEl.textContent = Object.keys(answers).length;
+        const totalCountEl = document.getElementById('total-player-count'); if(totalCountEl) totalCountEl.textContent = onlineCount;
+
+        const isTeam = latestRoomData.teamMode || false;
+        const toggleEl = document.getElementById('toggle-team-mode'); if(toggleEl) toggleEl.checked = isTeam;
+        const btnRand = document.getElementById('btn-random-team');
+        const sb = document.getElementById('team-scoreboard');
+
+        if (isTeam) {
+        if(btnRand) btnRand.classList.remove('hidden');
+        if(sb) { sb.classList.remove('hidden'); sb.classList.add('grid'); }
+        let ts = {red:0, blue:0, green:0, yellow:0};
+        uids.forEach(uid => { if(players[uid].team && players[uid].team !== 'none' && ts[players[uid].team] !== undefined) ts[players[uid].team] += (players[uid].score||0); });
+        const tsRed = document.getElementById('ts-red'); if(tsRed) tsRed.textContent = ts.red;
+        const tsBlue = document.getElementById('ts-blue'); if(tsBlue) tsBlue.textContent = ts.blue;
+        const tsGreen = document.getElementById('ts-green'); if(tsGreen) tsGreen.textContent = ts.green;
+        const tsYellow = document.getElementById('ts-yellow'); if(tsYellow) tsYellow.textContent = ts.yellow;
+        } else {
+        if(btnRand) btnRand.classList.add('hidden');
+        if(sb) { sb.classList.add('hidden'); sb.classList.remove('grid'); }
+        }
+
+        const listEl = document.getElementById('host-players-list');
+        if(listEl) {
+        listEl.innerHTML = '';
+        uids.forEach(uid => {
+        const p = players[uid];
+        const ansData = answers[uid];
+        const attempts = ansData?.attempts || {};
+        const attemptCount = attempts[currentHL] || 0;
+        const isCorrect = ansData?.isCorrect || false;
+
+        const li = document.createElement('li');
+        li.className = `p-2 rounded border ${p.online?'bg-slate-50 border-slate-200':'bg-slate-200 border-slate-300 opacity-60'} flex flex-col justify-between items-start text-sm shadow-sm gap-1`;
+
+        let teamBadge = '';
+        if (isTeam) {
+        const tc = { 'none': 'bg-slate-200 text-slate-500', 'red': 'bg-red-100 text-red-700', 'blue': 'bg-blue-100 text-blue-700', 'green': 'bg-green-100 text-green-700', 'yellow': 'bg-yellow-100 text-yellow-700' }[p.team || 'none'];
+        teamBadge = `<button onclick="cycleTeam('${uid}')" class="text-[10px] px-1.5 py-0.5 rounded font-bold ${tc} mr-2 flex-shrink-0 cursor-pointer border border-transparent hover:border-slate-400 focus:outline-none">TEAM</button>`;
+        }
+
+        li.innerHTML = `
+        <div class="flex items-center justify-between w-full">
+        <div class="flex items-center overflow-hidden">
+        ${teamBadge}
+        <span class="font-bold text-slate-700 truncate ${!p.online?'line-through':''}">${p.name}</span>
+        </div>
+        <span class="font-bold text-indigo-600 flex-shrink-0 ml-2">${p.score||0}pt</span>
+        </div>
+        <div class="w-full text-xs bg-white p-1 rounded border border-slate-100 flex justify-between mt-1">
+        <span class="truncate pr-1 font-bold ${isCorrect ? 'text-green-600' : (ansData?.text ? 'text-red-600' : 'text-slate-400')}">
+        ${isCorrect ? '⭕️' : (ansData?.text ? '❌' : '📝')} ${ansData?.text || '未回答'}
+        </span>
+        <span class="flex-shrink-0 text-slate-400">(${attemptCount}/3回)</span>
+        </div>
+        `;
+        listEl.appendChild(li);
+        });
+        }
+        }
+
+        // ==========================================
+        // 6. MULTIPLAYER - HOST
+        // ==========================================
+        window.createRoom = async function() {
+        if (!currentUser) { await showModal("部屋を作るにはログインが必要です。"); return; }
+        if (questions.length === 0) { await showModal("問題がありません。"); return; }
+
+        const pBtn = document.querySelector('#host-controls-pre button');
+        if(pBtn) { pBtn.disabled = true; pBtn.textContent = '作成中...'; }
+
+        try {
+        const rId = Math.floor(1000 + Math.random() * 9000).toString();
+        const rRef = doc(db, 'artifacts', appId, 'public', 'data', 'rooms', rId);
+
+        await setDoc(rRef, {
+        hostId: currentUser.uid,
+        status: 'waiting',
+        currentQuestion: questions[0],
+        hintLevel: 0,
+        players: {},
+        answers: {},
+        teamMode: false,
+        timerDeadline: null,
+        timerDuration: 0,
+        createdAt: Date.now()
+        });
+
+        activeRoomId = rId; isHost = true;
+
+        const hcP = document.getElementById('host-controls-pre'); if(hcP) hcP.classList.add('hidden');
+        const hrI = document.getElementById('host-room-info'); if(hrI) hrI.classList.remove('hidden');
+        const hpP = document.getElementById('host-players-panel'); if(hpP) hpP.classList.remove('hidden');
+        const drId = document.getElementById('display-room-id'); if(drId) drId.textContent = rId;
+        const has = document.getElementById('host-answers-status'); if(has) has.classList.remove('hidden');
+
+        unsubscribeRoom = onSnapshot(rRef, (snap) => {
+        if (!snap.exists()) { closeRoom(true); return; }
+        latestRoomData = snap.data();
+        renderPlayersPanel();
+        handleHostTimerSnapshot(latestRoomData);
+        }, (error) => {
+        console.error("Room snapshot error", error);
+        closeRoom(true);
+        });
+
+        await showModal(`部屋を作成しました！\n部屋番号は【${rId}】です。`);
+        prepareHostQuizView();
+
+        } catch(e) {
+        console.error("Create Room", e);
+        await showModal("部屋の作成に失敗しました。");
+        if(pBtn) { pBtn.disabled = false; pBtn.textContent = '部屋を作成する'; }
+        }
+        };
+
+        window.closeRoom = async function(forced = false) {
+        if (!activeRoomId || !isHost) return;
+        if (!forced && !await showModal("部屋を解散しますか？", true)) return;
+
+        try {
+        if(unsubscribeRoom) unsubscribeRoom();
+        await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'rooms', activeRoomId));
+        } catch(e) {}
+
+        activeRoomId = null; isHost = false; latestRoomData = null;
+        const hcP = document.getElementById('host-controls-pre');
+        if(hcP) { hcP.classList.remove('hidden'); const b = hcP.querySelector('button'); if(b) { b.disabled = false; b.textContent = '部屋を作成する'; } }
+        const hrI = document.getElementById('host-room-info'); if(hrI) hrI.classList.add('hidden');
+        const hpP = document.getElementById('host-players-panel'); if(hpP) hpP.classList.add('hidden');
+        const has = document.getElementById('host-answers-status'); if(has) has.classList.add('hidden');
+        clearInterval(globalTimerInterval);
+        const tc = document.getElementById('host-timer-container'); if(tc) tc.classList.add('hidden');
+        currentTimerDeadline = null;
+
+        if(forced) await showModal("部屋が閉じられました。");
+        };
+
+        function handleHostTimerSnapshot(data) {
+        if (data.timerDeadline && data.timerDeadline !== currentTimerDeadline && (data.status === 'playing')) {
+        currentTimerDeadline = data.timerDeadline;
+        startTimerUI(data.timerDeadline, data.timerDuration, 'host');
+        } else if (!data.timerDeadline) {
+        currentTimerDeadline = null;
+        clearInterval(globalTimerInterval);
+        const tc = document.getElementById('host-timer-container'); if(tc) tc.classList.add('hidden');
+        }
+        }
+
+        window.cycleTeam = async function(uid) {
+        if (!activeRoomId || !latestRoomData) return;
+        const current = latestRoomData.players[uid]?.team || 'none';
+        const tList = ['none', 'red', 'blue', 'green', 'yellow'];
+        let next = tList[(tList.indexOf(current) + 1) % tList.length];
+        if(next === 'none') next = 'red';
+        await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'rooms', activeRoomId), {
+        players: { [uid]: { team: next } }
+        }, { merge: true });
+        };
+
+        window.randomizeTeams = async function() {
+        if (!activeRoomId || !latestRoomData) return;
+        const uids = Object.keys(latestRoomData.players||{}).filter(uid => latestRoomData.players[uid].online);
+        const teams = ['red', 'blue', 'green', 'yellow'];
+        const updates = { players: {} };
+        for(let i = uids.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [uids[i], uids[j]] = [uids[j], uids[i]];
+        }
+        uids.forEach((uid, idx) => {
+        updates.players[uid] = { team: teams[idx % teams.length] };
+        });
+        await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'rooms', activeRoomId), updates, { merge: true });
+        };
+
+        window.toggleTeamMode = async function(e) {
+        if (!activeRoomId) return;
+        await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'rooms', activeRoomId), { teamMode: e.target.checked }, { merge: true });
+        };
+
+        function renderHostResultList(correctNameStr, overridePlayers = null, overrideAnswers = null) {
+        const listEl = document.getElementById('host-result-list');
+        if(!listEl) return;
+        const hC = document.getElementById('host-result-correct-name'); if(hC) hC.textContent = correctNameStr;
+        listEl.innerHTML = '';
+
+        const players = overridePlayers || (latestRoomData ? latestRoomData.players : {}) || {};
+        const answers = overrideAnswers || (latestRoomData ? latestRoomData.answers : {}) || {};
+
+        Object.keys(players).forEach(uid => {
+        const p = players[uid];
+        if (!p.online && !answers[uid]) return;
+
+        const ansData = answers[uid];
+        let ptsStr = "";
+        let isCorrect = ansData?.isCorrect || false;
+
+        if (isCorrect) {
+        if (ansData.hintLevel === 0) ptsStr = "<span class='text-xs bg-red-100 text-red-700 px-1 rounded ml-2 font-bold'>+20pt</span>";
+        else if (ansData.hintLevel === 1) ptsStr = "<span class='text-xs bg-orange-100 text-orange-700 px-1 rounded ml-2 font-bold'>+15pt</span>";
+        else if (ansData.hintLevel === 2) ptsStr = "<span class='text-xs bg-yellow-100 text-yellow-700 px-1 rounded ml-2 font-bold'>+10pt</span>";
+        }
+
+        const li = document.createElement('li');
+        li.className = `p-3 rounded-lg border-2 ${isCorrect?'bg-red-50 border-red-300 text-red-800':'bg-slate-50 border-slate-300 text-slate-700'} flex flex-col sm:flex-row justify-between items-start sm:items-center shadow-sm gap-1 sm:gap-0`;
+        li.innerHTML = `
+        <div class="flex items-center overflow-hidden w-full sm:w-1/2">
+        <span class="font-bold text-sm truncate">${p.name}</span>
+        ${isCorrect ? ptsStr : ''}
+        </div>
+        <span class="font-bold text-base sm:text-lg w-full sm:w-1/2 text-left sm:text-right truncate ${isCorrect?'text-red-600':''}">${ansData?ansData.text:'無回答'}</span>
+        `;
+        listEl.appendChild(li);
+        });
+        }
+
+        // ==========================================
+        // 7. MULTIPLAYER - GUEST
+        // ==========================================
+        function resetGuestView() {
+        const glp = document.getElementById('guest-login-panel'); if(glp) glp.classList.remove('hidden');
+        const gqp = document.getElementById('guest-quiz-panel'); if(gqp) gqp.classList.add('hidden');
+        const gri = document.getElementById('guest-room-id'); if(gri) gri.value = '';
+        const gpn = document.getElementById('guest-player-name'); if(gpn) gpn.value = '';
+        const glm = document.getElementById('guest-login-msg'); if(glm) glm.classList.add('hidden');
+        currentTimerDeadline = null;
+        clearInterval(globalTimerInterval);
+        }
+
+        window.joinRoom = async function() {
+        if (!currentUser) {
+        await showModal("通信の準備ができていないか、ログインに失敗しました。\nページを再読み込みしてください。");
+        return;
+        }
+        const rId = document.getElementById('guest-room-id').value.trim();
+        const pName = document.getElementById('guest-player-name').value.trim();
+        const msgEl = document.getElementById('guest-login-msg');
+
+        if (!rId || !pName) { if(msgEl) {msgEl.textContent = "部屋番号と名前を入力してください。"; msgEl.classList.remove('hidden');} return; }
+
+        try {
+        const rRef = doc(db, 'artifacts', appId, 'public', 'data', 'rooms', rId);
+        const snap = await getDoc(rRef);
+        if (!snap.exists()) { if(msgEl) {msgEl.textContent = "部屋が見つかりません。"; msgEl.classList.remove('hidden');} return; }
+
+        const data = snap.data();
+        const existing = data.players && data.players[currentUser.uid];
+
+        await setDoc(rRef, {
+        players: {
+        [currentUser.uid]: existing ? { ...existing, name: pName, online: true } : { name: pName, score: 0, team: 'none', online: true }
+        }
+        }, { merge: true });
+
+        activeRoomId = rId; isHost = false; myGuestName = pName;
+        const glp = document.getElementById('guest-login-panel'); if(glp) glp.classList.add('hidden');
+        const gqp = document.getElementById('guest-quiz-panel'); if(gqp) gqp.classList.remove('hidden');
+        const gmn = document.getElementById('guest-my-name'); if(gmn) gmn.textContent = pName;
+
+        unsubscribeRoom = onSnapshot(rRef, handleGuestSnapshot, (error) => {
+        console.error("Guest snapshot error", error);
+        leaveRoom(true);
+        });
+
+        } catch(e) {
+        console.error("Join", e);
+        if(msgEl) { msgEl.textContent = "入室エラー: " + e.message; msgEl.classList.remove('hidden'); }
+        }
+        };
+
+        window.leaveRoom = async function(forced = false) {
+        if (!activeRoomId || isHost) return;
+        if (!forced && !await showModal("部屋から退出しますか？", true)) return;
+
+        try {
+        if(unsubscribeRoom) unsubscribeRoom();
+        if (currentUser) {
+        const rRef = doc(db, 'artifacts', appId, 'public', 'data', 'rooms', activeRoomId);
+        await setDoc(rRef, { players: { [currentUser.uid]: { online: false } } }, { merge: true });
+        }
+        } catch(e){}
+
+        activeRoomId = null; latestRoomData = null; guestCurrentQuestionId = null;
+        if(currentMode==='guest') resetGuestView();
+        if(forced) await showModal("ホストが部屋を解散しました。");
+        };
+
+        function handleGuestSnapshot(snap) {
+        if (!snap.exists()) { leaveRoom(true); return; }
+        const data = snap.data();
+        latestRoomData = data;
+
+        const wScreen = document.getElementById('guest-waiting-screen');
+        const qArea = document.getElementById('guest-active-quiz');
+        const aArea = document.getElementById('guest-answer-area');
+        const rReveal = document.getElementById('guest-image-reveal');
+        const rList = document.getElementById('guest-result-list-panel');
+
+        // Team & Personal Score Update
+        renderGuestTeamScoreboard(data);
+
+        // Timer Update
+        if (data.timerDeadline && data.timerDeadline !== currentTimerDeadline && (data.status === 'playing')) {
+        currentTimerDeadline = data.timerDeadline;
+        startTimerUI(data.timerDeadline, data.timerDuration, 'guest');
+        } else if (!data.timerDeadline) {
+        currentTimerDeadline = null;
+        clearInterval(globalTimerInterval);
+        const tc = document.getElementById('guest-timer-container'); if(tc) tc.classList.add('hidden');
+        updateGuestFormState(data);
+        }
+
+        if (data.status === 'waiting') {
+        if(wScreen) wScreen.classList.remove('hidden'); if(qArea) qArea.classList.add('hidden'); if(aArea) aArea.classList.add('hidden'); if(rReveal) rReveal.classList.add('hidden'); if(rList) rList.classList.add('hidden');
+        clearInterval(typeInterval);
+        guestCurrentQuestionId = null; // 待機画面に戻ったらリセット
+        }
+        else if (data.status === 'playing') {
+        if(wScreen) wScreen.classList.add('hidden'); if(qArea) qArea.classList.remove('hidden'); if(rReveal) rReveal.classList.add('hidden'); if(rList) rList.classList.add('hidden');
+
+        const q = data.currentQuestion;
+        if (!q) return;
+
+        const qId = document.getElementById('guest-q-id'); if(qId) qId.textContent = q.id ? q.id.toString().slice(-4) : '?';
+        const bdg = document.getElementById('guest-diff-badge');
+        if(bdg) {
+        bdg.textContent = q.difficulty==='hard'?'🔴難':'🔵易';
+        bdg.className = `text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded border ${q.difficulty==='hard'?'bg-red-100 text-red-700 border-red-300':'bg-blue-100 text-blue-700 border-blue-300'}`;
+        }
+
+        if (data.hintLevel === 0) {
+        // 同じ問題でなければ文字送りを開始する
+        if (guestCurrentQuestionId !== q.id) {
+        guestCurrentQuestionId = q.id;
+        startTypewriter(q.desc||"", 100, 'guest-display-desc', null, data.typeStartAt);
+        }
+        } else if (data.hintLevel > 0) {
+        guestCurrentQuestionId = q.id;
+        clearInterval(typeInterval);
+        const dEl = document.getElementById('guest-display-desc');
+        if(dEl) { dEl.textContent = q.desc; dEl.classList.remove('typewriter-text'); }
+        }
+
+        if (data.hintLevel >= 1) {
+        const catEl = document.getElementById('guest-display-cat'); if(catEl) catEl.textContent = q.category;
+        const catC = document.getElementById('guest-cat-container'); if(catC) catC.classList.remove('hidden');
+        } else {
+        const catC = document.getElementById('guest-cat-container'); if(catC) catC.classList.add('hidden');
+        }
+
+        if (data.hintLevel >= 2) {
+        const typEl = document.getElementById('guest-display-type'); if(typEl) typEl.textContent = q.type;
+        const typC = document.getElementById('guest-type-container'); if(typC) typC.classList.remove('hidden');
+        } else {
+        const typC = document.getElementById('guest-type-container'); if(typC) typC.classList.add('hidden');
+        }
+
+        if(aArea) aArea.classList.remove('hidden');
+        updateGuestFormState(data);
+        }
+        else if (data.status === 'revealed') {
+        if(wScreen) wScreen.classList.add('hidden'); if(qArea) qArea.classList.remove('hidden'); if(aArea) aArea.classList.add('hidden');
+
+        const q = data.currentQuestion;
+        if (!q) return;
+
+        clearInterval(typeInterval);
+        const dD = document.getElementById('guest-display-desc'); if(dD) { dD.textContent = q.desc; dD.classList.remove('typewriter-text'); }
+        const dC = document.getElementById('guest-display-cat'); if(dC) dC.textContent = q.category;
+        const dCC = document.getElementById('guest-cat-container'); if(dCC) dCC.classList.remove('hidden');
+        const dT = document.getElementById('guest-display-type'); if(dT) dT.textContent = q.type;
+        const dTC = document.getElementById('guest-type-container'); if(dTC) dTC.classList.remove('hidden');
+
+        const iEl = document.getElementById('guest-display-image'); if(iEl) iEl.src = q.image;
+        const cN = document.getElementById('guest-correct-name'); if(cN) cN.textContent = q.pokemonName;
+        if(rReveal) rReveal.classList.remove('hidden');
+
+        renderGuestResultList(q.pokemonName, data);
+        if(rList) rList.classList.remove('hidden');
+        }
+        }
+
+        function renderGuestTeamScoreboard(data) {
+        const sb = document.getElementById('guest-team-scoreboard');
+        if (data.teamMode) {
+        if(sb) { sb.classList.remove('hidden'); sb.classList.add('grid'); }
+        let ts = {red:0, blue:0, green:0, yellow:0};
+        Object.values(data.players||{}).forEach(p => { if(p.team && p.team !== 'none' && ts[p.team] !== undefined) ts[p.team] += (p.score||0); });
+        const r = document.getElementById('g-ts-red'); if(r) r.textContent = ts.red;
+        const b = document.getElementById('g-ts-blue'); if(b) b.textContent = ts.blue;
+        const g = document.getElementById('g-ts-green'); if(g) g.textContent = ts.green;
+        const y = document.getElementById('g-ts-yellow'); if(y) y.textContent = ts.yellow;
+        } else {
+        if(sb) { sb.classList.add('hidden'); sb.classList.remove('grid'); }
+        }
+
+        if (currentUser && data.players && data.players[currentUser.uid]) {
+        const ms = document.getElementById('guest-my-score'); if(ms) ms.textContent = (data.players[currentUser.uid].score || 0) + "pt";
+        }
+        }
+
+        function updateGuestFormState(data) {
+        const currentHL = data.hintLevel || 0;
+        const myAnsData = data.answers?.[currentUser?.uid] || {};
+        const attemptsMap = myAnsData.attempts || {0:0, 1:0, 2:0};
+        const remainCount = 3 - (attemptsMap[currentHL] || 0);
+
+        const leftEl = document.getElementById('guest-attempts-left');
+        if (leftEl) leftEl.textContent = Math.max(0, remainCount);
+
+        const inp = document.getElementById('guest-answer-input');
+        const btn = document.getElementById('guest-submit-btn');
+        const msg = document.getElementById('guest-answered-msg');
+
+        if (myAnsData.text && (attemptsMap[currentHL] > 0)) {
+        if(msg) {
+        msg.classList.remove('hidden');
+        if (myAnsData.isCorrect) {
+        msg.innerHTML = `✅ 正解！ (${myAnsData.text})<br><span class="text-xs font-normal">正解発表をお待ちください</span>`;
+        msg.className = 'mt-2 text-center text-sm font-bold text-green-700 bg-green-50 py-2 px-3 rounded-lg border border-green-200 shadow-sm';
+        } else {
+        const countStr = remainCount > 0 ? `残り ${remainCount} 回回答できます` : `回答上限に達しました`;
+        msg.innerHTML = `❌ 不正解... (${myAnsData.text})<br><span class="text-xs font-normal">${countStr}</span>`;
+        msg.className = 'mt-2 text-center text-sm font-bold text-red-700 bg-red-50 py-2 px-3 rounded-lg border border-red-200 shadow-sm';
+        }
+        }
+        } else {
+        if(msg) msg.classList.add('hidden');
+        }
+
+        let isTimeUp = false;
+        if (data.timerDeadline && Date.now() > data.timerDeadline) isTimeUp = true;
+        else if (!data.timerDeadline) isTimeUp = true;
+
+        if (remainCount <= 0 || isTimeUp || myAnsData.isCorrect) {
+        if(inp) inp.disabled = true;
+        if(btn) { btn.disabled = true; btn.classList.add('opacity-50'); }
+        } else {
+        if(inp) inp.disabled = false;
+        if(btn) { btn.disabled = false; btn.classList.remove('opacity-50'); }
+        }
+        }
+
+        window.submitAnswer = async function(e) {
+        e.preventDefault();
+        if (!activeRoomId || !currentUser || !latestRoomData) return;
+
+        if (latestRoomData.timerDeadline && Date.now() > latestRoomData.timerDeadline) {
+        await showModal("時間切れです。"); return;
+        }
+
+        const ansInp = document.getElementById('guest-answer-input');
+        const ans = ansInp ? ansInp.value.trim() : '';
+        if (!ans) return;
+
+        const currentHL = latestRoomData.hintLevel || 0;
+        const myAnsData = latestRoomData.answers?.[currentUser.uid] || {};
+        const attempts = myAnsData.attempts || {0:0, 1:0, 2:0};
+
+        if (attempts[currentHL] >= 3) {
+        await showModal("このヒントでの回答回数の上限（3回）に達しました。"); return;
+        }
+        if (myAnsData.isCorrect) {
+        await showModal("すでに正解しています！"); return;
+        }
+
+        attempts[currentHL]++;
+
+        const q = latestRoomData.currentQuestion;
+        const normCorrect = normalizeAnswer(q.pokemonName);
+        const normAns = normalizeAnswer(ans);
+        let isCorrect = false;
+        let earnedScore = 0;
+
+        if (normAns === normCorrect || (normCorrect.includes(normAns) && normAns.length >= 2)) {
+        isCorrect = true;
+        if (currentHL === 0) earnedScore = 20;
+        else if (currentHL === 1) earnedScore = 15;
+        else if (currentHL === 2) earnedScore = 10;
+        }
+
+        const btn = document.getElementById('guest-submit-btn');
+        if(btn) btn.disabled = true;
+        try {
+        // 回答を記録
+        const updates = {
+        [`answers.${currentUser.uid}`]: { text: ans, hintLevel: currentHL, attempts: attempts, isCorrect: isCorrect }
+        };
+
+        // 正解時はスコアも即座に加算（ホストにもすぐ反映されるように）
+        if (isCorrect) {
+        const currentScore = latestRoomData.players[currentUser.uid]?.score || 0;
+        updates[`players.${currentUser.uid}.score`] = currentScore + earnedScore;
+        }
+
+        await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'rooms', activeRoomId), updates, { merge: true });
+        if(ansInp) ansInp.value = '';
+        } catch(err) { console.error("Submit", err); await showModal("送信エラー: " + err.message); }
+        finally { if(btn) btn.disabled = false; }
+        };
+
+        function renderGuestResultList(correctNameStr, data) {
+        const listEl = document.getElementById('guest-result-list');
+        if(!listEl) return;
+        listEl.innerHTML = '';
+
+        const players = data.players || {};
+        const answers = data.answers || {};
+
+        Object.keys(players).forEach(uid => {
+        const p = players[uid];
+        if (!p.online && !answers[uid]) return;
+
+        const ansData = answers[uid];
+        let isCorrect = ansData?.isCorrect || false;
+        let ptsStr = "";
+
+        if (isCorrect) {
+        if (ansData.hintLevel === 0) ptsStr = "<span class='text-[10px] bg-red-100 text-red-700 px-1 rounded ml-1 font-bold'>+20</span>";
+        else if (ansData.hintLevel === 1) ptsStr = "<span class='text-[10px] bg-orange-100 text-orange-700 px-1 rounded ml-1 font-bold'>+15</span>";
+        else if (ansData.hintLevel === 2) ptsStr = "<span class='text-[10px] bg-yellow-100 text-yellow-700 px-1 rounded ml-1 font-bold'>+10</span>";
+        }
+
+        const li = document.createElement('li');
+        li.className = `p-2 rounded border border-slate-200 ${isCorrect?'bg-red-50 text-red-800':'bg-slate-50 text-slate-700'} flex flex-col sm:flex-row justify-between items-start sm:items-center shadow-sm gap-1 sm:gap-0`;
+        li.innerHTML = `
+        <div class="flex items-center overflow-hidden w-full sm:w-1/2 pr-1">
+        <span class="font-bold text-xs truncate">${p.name}</span>
+        ${isCorrect ? ptsStr : ''}
+        </div>
+        <span class="font-bold text-sm w-full sm:w-1/2 text-left sm:text-right truncate ${isCorrect?'text-red-600':''}">${ansData?ansData.text:'-'}</span>
+        `;
+        listEl.appendChild(li);
+        });
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+
+    </script>
+</body>
+</html>
